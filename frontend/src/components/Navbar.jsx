@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; 
 import logoGorseli from '../assets/logo.png';
 
-
 const menuLinkleri = [
-  { id: 1, path: '/', label: 'Ana Sayfa' },
-  { id: 2, path: '/about', label: 'Biz Kimiz?' },
-  { id: 3, path: '/projects', label: 'Neler Yaptık?' }
+  { id: 1, path: '/', labelKey: 'navbar.anaSayfa' },
+  { id: 2, path: '/about', labelKey: 'navbar.bizKimiz' },
+  { id: 3, path: '/projects', labelKey: 'navbar.nelerYaptik' } 
 ];
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { t, i18n } = useTranslation(); 
 
   return (
     <header style={{ 
@@ -37,10 +38,7 @@ function Navbar() {
             <img 
               src={logoGorseli} 
               alt="UrgCo" 
-              style={{ 
-                height: '40px', 
-                display: 'block' 
-              }} 
+              style={{ height: '40px', display: 'block' }} 
             />
           </Link>
         </div>
@@ -55,45 +53,76 @@ function Navbar() {
             fontSize: '28px', 
             cursor: 'pointer',
             color: '#333',
-            position: 'relative', // Z-index'in çalışması için gerekli
-            zIndex: '1002'        // Menünün üstünde kalıp (X) ikonunun tıklanabilir olmasını sağlar
+            position: 'relative', 
+            zIndex: '1002'        
           }}
           className="hamburger-icon"
         >
           {isOpen ? '✕' : '☰'}
         </button>
 
-        {/* SAĞ KISIM: Dinamik Menü Linkleri */}
-        <div 
-          className={`nav-links ${isOpen ? 'active' : ''}`}
-          style={{ 
-            display: 'flex', 
-            gap: '25px',
-            alignItems: 'center'
-          }}
-        >
-          {/* 2. DİNAMİK ÜRETİM: Linkleri veriden map() ile çekiyoruz */}
-          {menuLinkleri.map((link) => (
-            <NavLink 
-              key={link.id}
-              to={link.path} 
-              onClick={() => setIsOpen(false)} 
-              style={({ isActive }) => ({
-                textDecoration: 'none',
-                fontSize: '20px',
-                color: isActive ? '#7426B0' : '#000000',
-                fontWeight: 'normal',
-                transition: 'color 0.2s ease-in-out'
-              })}
+        {/* SAĞ KISIM: Dinamik Menü Linkleri ve Dil Seçeneği */}
+        <div className={`nav-links ${isOpen ? 'active' : ''}`}>
+          
+          {/* SADECE MENÜ LİNKLERİNİ TUTAN KISIM */}
+          <div className="menu-items">
+            {menuLinkleri.map((link) => (
+              <NavLink 
+                key={link.id}
+                to={link.path} 
+                onClick={() => setIsOpen(false)} 
+                style={({ isActive }) => ({
+                  textDecoration: 'none',
+                  fontSize: '20px',
+                  color: isActive ? '#7426B0' : '#000000',
+                  fontWeight: 'normal',
+                  transition: 'color 0.2s ease-in-out'
+                })}
+              >
+                {t(link.labelKey)}
+              </NavLink>
+            ))}
+          </div>
+
+          {/* SADECE DİL DEĞİŞTİRİCİYİ TUTAN KISIM */}
+          <div className="lang-switcher">
+            <span 
+              onClick={() => {
+                i18n.changeLanguage('tr');
+                setIsOpen(false);
+              }}
+              style={{ 
+                cursor: 'pointer', 
+                fontSize: '16px',
+                fontWeight: i18n.language === 'tr' ? '700' : '400', 
+                color: i18n.language === 'tr' ? '#7426B0' : '#666',
+                transition: 'all 0.2s'
+              }}
             >
-              {link.label}
-            </NavLink>
-          ))}
+              TR
+            </span>
+            <span style={{ color: '#ccc', fontSize: '14px' }}>|</span>
+            <span 
+              onClick={() => {
+                i18n.changeLanguage('en');
+                setIsOpen(false);
+              }}
+              style={{ 
+                cursor: 'pointer', 
+                fontSize: '16px',
+                fontWeight: i18n.language === 'en' ? '700' : '400', 
+                color: i18n.language === 'en' ? '#7426B0' : '#666',
+                transition: 'all 0.2s'
+              }}
+            >
+              EN
+            </span>
+          </div>
+
         </div>
       </nav>
 
       {/* MOBİL İÇİN ARKA PLAN KARARTMASI (Overlay) */}
-      {/* Menü açıkken sayfanın geri kalanını hafif karartır ve tıklandığında menüyü kapatır */}
       {isOpen && (
         <div 
           onClick={() => setIsOpen(false)}
@@ -110,33 +139,65 @@ function Navbar() {
         />
       )}
 
-      {/* MOBİL İÇİN YANDAN KAYAN MENÜ CSS'İ */}
+      {/* CSS (MASAÜSTÜ VE MOBİL YERLEŞİMLERİ) */}
       <style>{`
+        /* --- MASAÜSTÜ (Varsayılan) --- */
+        .nav-links {
+          display: flex;
+          flex: 1;
+          justify-content: flex-end; /* Tüm içerikleri en sağa iter */
+          align-items: center;
+        }
+
+        .menu-items {
+          display: flex;
+          gap: 25px;
+          align-items: center;
+        }
+
+        .lang-switcher {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          margin-left: 50px; /* Menü linklerinden uzaklaştırıp bağımsız gösterir */
+        }
+
+
+        /* --- MOBİL UYUM (max-width: 768px) --- */
         @media (max-width: 768px) {
           .hamburger-icon {
             display: block !important;
           }
           
-          /* Yandan Açılma Mantığı Burada Devreye Giriyor */
           .nav-links {
             position: fixed !important;
             top: 0;
             right: 0;
-            height: 100vh;           /* Ekranın tamamını dikeyde kaplar */
-            width: 250px;            /* Menünün genişliği */
+            height: 100vh;           
+            width: 250px;            
             background-color: #F3F6FB;
-            flex-direction: column;
-            padding-top: 80px !important; /* X butonunun altında kalsın diye üstten boşluk */
-            gap: 30px !important;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.1); /* Sol tarafına hafif bir gölge ekler */
-            
-            /* Animasyon (Kayarak gelme efekti) */
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            padding-top: 80px !important; 
+            padding-bottom: 40px !important; /* En alttaki buton ekran dışına taşmasın diye */
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1); 
             transition: transform 0.3s ease-in-out;
             transform: ${isOpen ? 'translateX(0)' : 'translateX(100%)'};
             z-index: 1001;
           }
 
-          /* Masaüstünde karartmanın görünmemesini garantiye alıyoruz */
+          .menu-items {
+            flex-direction: column;
+            gap: 30px !important;
+          }
+
+          .lang-switcher {
+            margin-left: 0 !important;
+            margin-top: auto !important; /* DİL SEÇENEĞİNİ MENÜNÜN EN ALTINA İTER */
+            justify-content: center;
+            width: 100%;
+          }
+
           .menu-overlay {
             display: block;
           }

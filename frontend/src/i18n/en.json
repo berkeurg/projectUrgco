@@ -1,0 +1,12 @@
+{
+  "navbar": {
+    "anaSayfa": "Home",
+    "bizKimiz": "About Us",
+    "nelerYaptik": "Projects"
+  },
+  "footer": {
+    "mesaj1": "We are here to add value to your business.",
+    "mesaj2": "Best regards.",
+    "telif": "All rights reserved."
+  }
+}

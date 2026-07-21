@@ -1,0 +1,12 @@
+{
+  "navbar": {
+    "anaSayfa": "Ana Sayfa",
+    "bizKimiz": "Biz Kimiz?",
+    "nelerYaptik": "Neler Yaptık?"
+  },
+  "footer": {
+    "mesaj1": "İşletmenize değer katmak için buradayız.",
+    "mesaj2": "Saygılarımızla.",
+    "telif": "Tüm hakları saklıdır."
+  }
+}
