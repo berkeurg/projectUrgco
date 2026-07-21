@@ -12,9 +12,11 @@ function Home() {
     }}>
       
       {/* Karşılama Alanı (Hero Section) */}
-      <section style={{ textAlign: 'center', marginBottom: '60px', marginTop: '40px' }}>
-        <h1 style={{ fontSize: '3rem', margin: '0 0 10px 0', color: '#269b24' }}>
-          Merhaba, Ben Bennuş Tünca
+      <section style={{ textAlign: 'center',
+        marginBottom: '60px',
+        marginTop: '40px' }}>
+        <h1 style={{ fontSize: '2.5rem', lineHeight: '1.2' }}>
+          urgco ile tanışmaya hazır mısınız?
         </h1>
       </section>
 

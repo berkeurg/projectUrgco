@@ -2,8 +2,14 @@ import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import logoGorseli from '../assets/logo.png';
 
+
+const menuLinkleri = [
+  { id: 1, path: '/', label: 'Ana Sayfa' },
+  { id: 2, path: '/about', label: 'Biz Kimiz?' },
+  { id: 3, path: '/projects', label: 'Neler Yaptık?' }
+];
+
 function Navbar() {
-  // Mobil menünün açık olup olmadığını kontrol eden state
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -22,7 +28,7 @@ function Navbar() {
         padding: '15px 30px', 
         maxWidth: '1200px',              
         margin: '0 auto',
-        flexWrap: 'wrap' // Mobilde esneklik sağlar
+        flexWrap: 'wrap'
       }}>
         
         {/* SOL KISIM: Logo Alanı */}
@@ -39,23 +45,25 @@ function Navbar() {
           </Link>
         </div>
 
-        {/* MOBİL İÇİN HAMBURGER BUTONU (Sadece küçük ekranda görünür) */}
+        {/* MOBİL İÇİN HAMBURGER BUTONU */}
         <button 
           onClick={() => setIsOpen(!isOpen)}
           style={{ 
-            display: 'none', // Büyük ekranda gizli
+            display: 'none', 
             background: 'none', 
             border: 'none', 
             fontSize: '28px', 
             cursor: 'pointer',
-            color: '#333'
+            color: '#333',
+            position: 'relative', // Z-index'in çalışması için gerekli
+            zIndex: '1002'        // Menünün üstünde kalıp (X) ikonunun tıklanabilir olmasını sağlar
           }}
           className="hamburger-icon"
         >
           {isOpen ? '✕' : '☰'}
         </button>
 
-        {/* SAĞ KISIM: Menü Linkleri (Masaüstü ve Mobil Duruma Göre Şekillenir) */}
+        {/* SAĞ KISIM: Dinamik Menü Linkleri */}
         <div 
           className={`nav-links ${isOpen ? 'active' : ''}`}
           style={{ 
@@ -64,54 +72,79 @@ function Navbar() {
             alignItems: 'center'
           }}
         >
-          {/* Ana Sayfa Linki */}
-          <NavLink 
-            to="/" 
-            onClick={() => setIsOpen(false)} // Mobilde bir linke tıklandığında menüyü kapatır
-            style={({ isActive }) => ({
-              textDecoration: 'none',
-              fontSize: '20px',
-              color: isActive ? '#7426B0' : '#000000',
-              fontWeight: isActive ? 'normal' : 'normal',
-              transition: 'color 0.2s ease-in-out'
-            })}
-          >
-            Ana Sayfa
-          </NavLink>
-
-          {/* Hakkımda Linki */}
-          <NavLink 
-            to="/about" 
-            onClick={() => setIsOpen(false)} // Mobilde bir linke tıklandığında menüyü kapatır
-            style={({ isActive }) => ({
-              textDecoration: 'none',
-              fontSize: '20px',
-              color: isActive ? '#7426B0' : '#000000',
-              fontWeight: isActive ? 'normal' : 'normal',
-              transition: 'color 0.2s ease-in-out'
-            })}
-          >
-            Biz Kimiz?
-          </NavLink>
-
+          {/* 2. DİNAMİK ÜRETİM: Linkleri veriden map() ile çekiyoruz */}
+          {menuLinkleri.map((link) => (
+            <NavLink 
+              key={link.id}
+              to={link.path} 
+              onClick={() => setIsOpen(false)} 
+              style={({ isActive }) => ({
+                textDecoration: 'none',
+                fontSize: '20px',
+                color: isActive ? '#7426B0' : '#000000',
+                fontWeight: 'normal',
+                transition: 'color 0.2s ease-in-out'
+              })}
+            >
+              {link.label}
+            </NavLink>
+          ))}
         </div>
       </nav>
 
-      {/* MOBİL İÇİN AÇILIR KAPANIR MENÜ ALANI (CSS ile ekran küçükken aktifleşir) */}
+      {/* MOBİL İÇİN ARKA PLAN KARARTMASI (Overlay) */}
+      {/* Menü açıkken sayfanın geri kalanını hafif karartır ve tıklandığında menüyü kapatır */}
+      {isOpen && (
+        <div 
+          onClick={() => setIsOpen(false)}
+          className="menu-overlay"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            zIndex: '1000'
+          }}
+        />
+      )}
+
+      {/* MOBİL İÇİN YANDAN KAYAN MENÜ CSS'İ */}
       <style>{`
         @media (max-width: 768px) {
           .hamburger-icon {
             display: block !important;
           }
+          
+          /* Yandan Açılma Mantığı Burada Devreye Giriyor */
           .nav-links {
-            display: ${isOpen ? 'flex' : 'none'} !important;
-            flex-direction: column;
-            width: 100%;
+            position: fixed !important;
+            top: 0;
+            right: 0;
+            height: 100vh;           /* Ekranın tamamını dikeyde kaplar */
+            width: 250px;            /* Menünün genişliği */
             background-color: #F3F6FB;
-            padding: 20px 0;
-            gap: 15px !important;
-            text-align: center;
-            border-top: 1px solid #ddd;
+            flex-direction: column;
+            padding-top: 80px !important; /* X butonunun altında kalsın diye üstten boşluk */
+            gap: 30px !important;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1); /* Sol tarafına hafif bir gölge ekler */
+            
+            /* Animasyon (Kayarak gelme efekti) */
+            transition: transform 0.3s ease-in-out;
+            transform: ${isOpen ? 'translateX(0)' : 'translateX(100%)'};
+            z-index: 1001;
+          }
+
+          /* Masaüstünde karartmanın görünmemesini garantiye alıyoruz */
+          .menu-overlay {
+            display: block;
+          }
+        }
+
+        @media (min-width: 769px) {
+          .menu-overlay {
+            display: none !important;
           }
         }
       `}</style>
