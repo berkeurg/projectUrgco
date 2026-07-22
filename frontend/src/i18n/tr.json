@@ -8,5 +8,9 @@
     "mesaj1": "İşletmenize değer katmak için buradayız.",
     "mesaj2": "Saygılarımızla.",
     "telif": "Tüm hakları saklıdır."
+  },
+  "home": {
+  "heroTitle": "İşletmenizi Dijitalde Zirveye Taşıyoruz",
+  "heroSubtitle": "Sade, hızlı ve modern web çözümleriyle markanıza kalıcı değer katıyoruz."
   }
 }
