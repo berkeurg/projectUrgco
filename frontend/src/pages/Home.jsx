@@ -115,7 +115,6 @@ function Home() {
 
         .brands-grid {
           display: grid;
-          /* SİHİRLİ KOD: Ekran genişliğine göre 150px'lik sütunları otomatik yan yana dizer, sığmazsa alt satıra atar */
           grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
           gap: 40px;
           align-items: center;
@@ -127,8 +126,7 @@ function Home() {
           align-items: center;
           justify-content: center;
           transition: transform 0.3s ease, filter 0.3s ease;
-          filter: grayscale(100%);
-          opacity: 0.5;
+          opacity: 0.7;
           cursor: pointer;
         }
 
