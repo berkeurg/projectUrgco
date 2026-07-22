@@ -10,7 +10,8 @@
     "telif": "All rights reserved."
   },
   "home": {
-  "heroTitle": "Elevating Your Business in the Digital World",
-  "heroSubtitle": "We add lasting value to your brand with clean, fast, and modern web solutions."
-}
+    "heroTitle": "Elevating Your Business in the Digital World",
+    "heroSubtitle": "We add lasting value to your brand with clean, fast, and modern web solutions.",
+    "brandsLabel": "COMPANIES THAT TRUST US"
+  }
 }

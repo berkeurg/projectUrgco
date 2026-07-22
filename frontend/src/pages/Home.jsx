@@ -31,7 +31,7 @@ function Home() {
       <section className="brands-section">
         <div className="brands-container">
           
-          <p className="brands-label">BİZE GÜVENENLER</p>
+          <p className="brands-label">{t('home.brandsLabel')}</p>
           
           <div className="brands-grid">
             {partnerLogos.map((brand) => (

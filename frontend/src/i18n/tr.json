@@ -10,7 +10,8 @@
     "telif": "Tüm hakları saklıdır."
   },
   "home": {
-  "heroTitle": "İşletmenizi Dijitalde Zirveye Taşıyoruz",
-  "heroSubtitle": "Sade, hızlı ve modern web çözümleriyle markanıza kalıcı değer katıyoruz."
+    "heroTitle": "İşletmenizi Dijitalde Zirveye Taşıyoruz",
+    "heroSubtitle": "Sade, hızlı ve modern web çözümleriyle markanıza kalıcı değer katıyoruz.",
+    "brandsLabel": "BİZE GÜVENENLER"
   }
 }
