@@ -66,7 +66,8 @@ function Navbar() {
           
           {/* SADECE MENÜ LİNKLERİNİ TUTAN KISIM */}
           <div className="menu-items">
-            {menuLinkleri.map((link) => (
+            {/* MAP fonksiyonuna index parametresini ekledik */}
+            {menuLinkleri.map((link, index) => (
               <NavLink 
                 key={link.id}
                 to={link.path} 
@@ -76,7 +77,12 @@ function Navbar() {
                   fontSize: '20px',
                   color: isActive ? '#7426B0' : '#000000',
                   fontWeight: 'normal',
-                  transition: 'color 0.2s ease-in-out'
+                  transition: 'color 0.2s ease-in-out',
+                  
+                  /* Animasyon Kodları */
+                  opacity: 0, 
+                  animation: 'slideDownFade 0.5s ease-out forwards',
+                  animationDelay: `${index * 0.15}s` /* Her linke sırayla gecikme verir */
                 })}
               >
                 {t(link.labelKey)}
@@ -85,7 +91,15 @@ function Navbar() {
           </div>
 
           {/* SADECE DİL DEĞİŞTİRİCİYİ TUTAN KISIM */}
-          <div className="lang-switcher">
+          <div 
+            className="lang-switcher"
+            style={{
+              /* Dil seçeneğinin de linklerden hemen sonra süzülerek gelmesi için */
+              opacity: 0,
+              animation: 'slideDownFade 0.5s ease-out forwards',
+              animationDelay: `${menuLinkleri.length * 0.15}s` 
+            }}
+          >
             <span 
               onClick={() => {
                 i18n.changeLanguage('tr');
@@ -139,13 +153,25 @@ function Navbar() {
         />
       )}
 
-      {/* CSS (MASAÜSTÜ VE MOBİL YERLEŞİMLERİ) */}
+      {/* CSS (MASAÜSTÜ VE MOBİL YERLEŞİMLERİ + ANİMASYONLAR) */}
       <style>{`
+        /* --- YENİ EKLENEN ANİMASYON --- */
+        @keyframes slideDownFade {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         /* --- MASAÜSTÜ (Varsayılan) --- */
         .nav-links {
           display: flex;
           flex: 1;
-          justify-content: flex-end; /* Tüm içerikleri en sağa iter */
+          justify-content: flex-end; 
           align-items: center;
         }
 
@@ -159,9 +185,8 @@ function Navbar() {
           display: flex;
           gap: 8px;
           align-items: center;
-          margin-left: 50px; /* Menü linklerinden uzaklaştırıp bağımsız gösterir */
+          margin-left: 50px; 
         }
-
 
         /* --- MOBİL UYUM (max-width: 768px) --- */
         @media (max-width: 768px) {
@@ -179,7 +204,7 @@ function Navbar() {
             flex-direction: column !important;
             justify-content: flex-start !important;
             padding-top: 80px !important; 
-            padding-bottom: 40px !important; /* En alttaki buton ekran dışına taşmasın diye */
+            padding-bottom: 40px !important; 
             box-shadow: -5px 0 15px rgba(0,0,0,0.1); 
             transition: transform 0.3s ease-in-out;
             transform: ${isOpen ? 'translateX(0)' : 'translateX(100%)'};
@@ -193,7 +218,7 @@ function Navbar() {
 
           .lang-switcher {
             margin-left: 0 !important;
-            margin-top: auto !important; /* DİL SEÇENEĞİNİ MENÜNÜN EN ALTINA İTER */
+            margin-top: auto !important; 
             justify-content: center;
             width: 100%;
           }
