@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-// Admin paneli gelene kadar kullanacağımız Mock Data
+// Admin paneli (DB) gelene kadar kullanacağımız Mock Data
 const partnerLogos = [
   { id: 1, name: 'Ciğerci Özkan', url: 'https://cigerciozkan.com', logo: 'https://cigerciozkan.com/cigerciozkanassets/logo1.png' },
   { id: 2, name: 'Marka 2', url: '#', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Porsche_hood_emblem.png' },
@@ -27,40 +27,39 @@ function Home() {
         </div>
       </section>
 
-      {/* --- TAM SAYFA GENİŞLİĞİNDE KAYAN BANT --- */}
-      {/* Kapsayıcının dışına alarak tüm ekranı kaplamasını sağladık */}
-      <div className="marquee-wrapper">
-        <div className="marquee-container">
-          <div className="marquee-track">
-            
-            {/* JS'in Gücü: 2K ve daha geniş ekranlardaki boşluğu kapatmak için diziyi 4 KERE birleştiriyoruz */}
-            {[...partnerLogos, ...partnerLogos, ...partnerLogos, ...partnerLogos].map((brand, index) => (
+      {/* --- YENİ: SABİT MARKA IZGARASI (GRID) --- */}
+      <section className="brands-section">
+        <div className="brands-container">
+          
+          <p className="brands-label">BİZE GÜVENENLER</p>
+          
+          <div className="brands-grid">
+            {partnerLogos.map((brand) => (
               <a 
-                key={`${brand.id}-${index}`} 
+                key={brand.id} 
                 href={brand.url} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="marquee-item"
+                className="brand-item"
               >
                 <img src={brand.logo} alt={brand.name} />
               </a>
             ))}
-            
           </div>
+
         </div>
-      </div>
+      </section>
 
       {/* SAYFA İÇİ STİLLER */}
       <style>{`
+        /* --- HERO CSS --- */
         .hero-section {
-          /* Bandın alanı kaplaması için esneklik verdik */
-          flex: 1;
+          flex: 1; /* Ekranın üst kısmında boşluk dengelemesini sağlar */
           display: flex;
           align-items: center;
           justify-content: center;
           text-align: center;
-          padding: 80px 20px;
-  
+          padding: 80px 20px 40px 20px;
         }
 
         .hero-content {
@@ -90,61 +89,59 @@ function Home() {
           max-width: 600px;
         }
 
-        /* --- YENİ BANT MİMARİSİ (Tam Sayfa ve Geniş) --- */
-        .marquee-wrapper {
-          width: 100%; /* Ekranın tamamını kaplar */
-          background-color: #F8F9FA; /* Bandın ayrışması için çok hafif gri/beyaz bir ton */
-          padding: 40px 0; /* Bandı yukardan ve aşağıdan daha geniş/kalın yaptık */
-          border-top: 1px solid #EAEAEA;
-          border-bottom: 1px solid #EAEAEA;
-          margin-top: auto; /* İçeriğin en altına iter */
-        }
-
-        .marquee-container {
+        /* --- MARKA IZGARASI CSS --- */
+          .brands-section {
           width: 100%;
-          overflow: hidden;
-          position: relative;
-          display: flex;
+          max-width: 1000px; /* BEYAZ ALANIN YANLARDAN KIRPILDIĞI YER BURASI */
+          margin: 0 auto; /* Beyaz alanı ekranın tam ortasına hizalar */
+          padding: 40px 20px; 
+          background-color: #FFFFFF;  
+          border-radius: 15px;
+        }
+
+        .brands-container {
+          width: 100%;
+          text-align: center;
+        }
+
+        .brands-label {
+          font-size: 12px;
+          color: #000000;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          margin-bottom: 40px;
+          font-weight: 600;
+        }
+
+        .brands-grid {
+          display: grid;
+          /* SİHİRLİ KOD: Ekran genişliğine göre 150px'lik sütunları otomatik yan yana dizer, sığmazsa alt satıra atar */
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 40px;
           align-items: center;
-          -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-          mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+          justify-items: center;
         }
 
-        .marquee-track {
-          display: flex;
-          gap: 60px; /* Logolar arasını açtık */
-          width: max-content;
-          animation: scroll 37s linear infinite; /* Daha pürüzsüz bir hız */
-        }
-
-        .marquee-wrapper:hover .marquee-track {
-          animation-play-state: paused;
-        }
-
-        .marquee-item {
+        .brand-item {
           display: flex;
           align-items: center;
           justify-content: center;
           transition: transform 0.3s ease, filter 0.3s ease;
-          opacity: 0.6; 
+          filter: grayscale(100%);
+          opacity: 0.5;
           cursor: pointer;
         }
 
-        .marquee-item:hover {
-          transform: scale(1.08); 
-          filter: grayscale(0%); /* Üzerine gelince orijinal renkleri parlar */
-          opacity: 1; 
+        .brand-item:hover {
+          transform: scale(1.05);
+          filter: grayscale(0%);
+          opacity: 1;
         }
 
-        .marquee-item img {
-          height: 65px; /* Logoları da belirgin şekilde büyüttük */
+        .brand-item img {
+          max-height: 60px;
+          max-width: 130px;
           object-fit: contain;
-        }
-
-        @keyframes scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(calc(-50% - 30px)); } 
-          /* Gap (60px) değerinin yarısını (30px) çıkararak kusursuz birleştirme yapıyoruz */
         }
 
         @keyframes fadeUp {
