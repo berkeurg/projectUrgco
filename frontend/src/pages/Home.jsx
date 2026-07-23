@@ -100,6 +100,28 @@ function Home() {
         </div>
       </section>
 
+      {/* --- İLETİŞİM (CTA) BÖLÜMÜ (TAM EKRAN SİYAH) --- */}
+      <section className="contact-section-dark">
+        <div className="contact-container">
+          <h2 className="contact-title">{t('home.contactTitle')}</h2>
+          <p className="contact-subtitle">
+            {t('home.contactSubtitle')}
+          </p>
+          
+          <div className="contact-actions">
+            {/* 1. Buton: Mail uygulamasına atar */}
+            <a href="mailto:iletisim@urgco.com" className="contact-btn primary-btn">
+              {t('home.contactPrimaryBtn')}
+            </a>
+            
+            {/* 2. Buton: Arama uygulamasına atar (Numarayı kendine göre değiştir) */}
+            <a href="https://wa.me/905332022073?text=Merhaba,%20web%20sitesi%20için%20bilgi%20almak%20istiyorum." className="contact-btn secondary-btn">
+              {t('home.contactSecondaryBtn')}
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* SAYFA İÇİ STİLLER */}
       <style>{`
         /* --- HERO CSS --- */
@@ -281,6 +303,84 @@ function Home() {
           font-size: 15px;
           color: #666666;
           line-height: 1.6;
+        }
+
+        /* --- İLETİŞİM (CTA) BÖLÜMÜ CSS (Koyu Arka Plan) --- */
+        .contact-section-dark {
+          width: 100%;
+          background-color: #7426B0;
+          padding: 120px 20px; 
+          display: flex;
+          justify-content: center;
+          border-radius: 15px;
+        }
+
+        .contact-container {
+          max-width: 800px;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .contact-title {
+          font-size: clamp(32px, 4vw, 42px);
+          color: #ffffff;
+          font-weight: 700;
+          letter-spacing: -1px;
+          margin-bottom: 20px;
+        }
+
+        .contact-subtitle {
+          font-size: clamp(16px, 2vw, 18px);
+          color: #cecece; /* Siyah üzerinde göz yormayan gri */
+          max-width: 600px;
+          line-height: 1.6;
+          margin-bottom: 50px;
+        }
+
+        .contact-actions {
+          display: flex;
+          gap: 20px;
+          justify-content: center;
+          flex-wrap: wrap; /* Mobilde sığmazlarsa otomatik alt alta atar */
+        }
+
+        .contact-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          font-weight: 600;
+          padding: 16px 36px;
+          border-radius: 12px;
+          text-decoration: none;
+          transition: all 0.3s ease;
+        }
+
+        /* Dolgulu Beyaz Buton */
+        .primary-btn {
+          background-color: #FFFFFF;
+          color: #0B0B0B;
+        }
+
+        .primary-btn:hover {
+          transform: translateY(-4px);
+          background-color: #F0F0F0;
+          box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Çizgili (Outlined) Transparan Buton */
+        .secondary-btn {
+          background-color: transparent;
+          color: #FFFFFF;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .secondary-btn:hover {
+          transform: translateY(-4px);
+          background-color: rgba(255, 255, 255, 0.1);
+          border-color: #FFFFFF;
         }
       `}</style>
     </div>

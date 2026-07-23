@@ -20,6 +20,10 @@
     "service2Title": "Özel Yönetim Panelleri",
     "service2Desc": "İş süreçlerinizi dijitalleştiren, ihtiyacınıza tam uyan hızlı, güvenli ve kullanımı kolay arka plan sistemleri geliştiriyoruz.",
     "service3Title": "QR Menü & Özel Sistemler",
-    "service3Desc": "İşletmeler için SEO uyumlu, özel pop-up bildirim destekli ve yüksek performanslı dijital menü/katalog altyapıları kuruyoruz."
+    "service3Desc": "İşletmeler için SEO uyumlu, özel pop-up bildirim destekli ve yüksek performanslı dijital menü/katalog altyapıları kuruyoruz.",
+    "contactTitle": "Dijital Dönüşüm Yolculuğunuz Başlasın",
+    "contactSubtitle": "İşletmenizi dijitalde büyütmek ve modern teknolojilerle tanıştırmak için kahve içmeye ne dersiniz?",
+    "contactPrimaryBtn": "Teklif Al",
+    "contactSecondaryBtn": "İletişim"
   }
 }

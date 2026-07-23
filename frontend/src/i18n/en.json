@@ -20,6 +20,10 @@
     "service2Title": "Custom Management Panels",
     "service2Desc": "We develop fast, secure, and user-friendly backend systems that digitize your business processes and meet your specific needs.",
     "service3Title": "QR Menu & Custom Systems",
-    "service3Desc": "We set up SEO-friendly, high-performance digital menu/catalog infrastructures for businesses, with custom pop-up notification support."
+    "service3Desc": "We set up SEO-friendly, high-performance digital menu/catalog infrastructures for businesses, with custom pop-up notification support.",
+    "contactTitle": "Start Your Digital Transformation Journey",
+    "contactSubtitle": "How about having a coffee to grow your business digitally and introduce you to modern technologies?",
+    "contactPrimaryBtn": "Get a Quote",
+    "contactSecondaryBtn": "Contact Us"
   }
 }
