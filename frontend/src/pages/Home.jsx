@@ -50,6 +50,56 @@ function Home() {
         </div>
       </section>
 
+      {/* --- WEB TASARIM HİZMETLERİMİZ --- */}
+      <section className="services-section">
+        <div className="services-container">
+          
+          <div className="services-header">
+            <h2 className="services-title">{t('home.servicesTitle')}</h2>
+            <p className="services-subtitle">
+              {t('home.servicesSubtitle')}
+            </p>
+          </div>
+
+          <div className="services-grid">
+            
+            {/* Kart 1 */}
+            <div className="service-card">
+              <div className="service-icon-wrapper">
+                <span className="service-icon">✦</span>
+              </div>
+              <h3 className="service-card-title">{t('home.service1Title')}</h3>
+              <p className="service-card-desc">
+                {t('home.service1Desc')}
+              </p>
+            </div>
+
+            {/* Kart 2 */}
+            <div className="service-card">
+              <div className="service-icon-wrapper">
+                <span className="service-icon">✦</span>
+              </div>
+              <h3 className="service-card-title">{t('home.service2Title')}</h3>
+              <p className="service-card-desc">
+                {t('home.service2Desc')}
+              </p>
+            </div>
+
+            {/* Kart 3 */}
+            <div className="service-card">
+              <div className="service-icon-wrapper">
+                <span className="service-icon">✦</span>
+              </div>
+              <h3 className="service-card-title">{t('home.service3Title')}</h3>
+              <p className="service-card-desc">
+                {t('home.service3Desc')}
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* SAYFA İÇİ STİLLER */}
       <style>{`
         /* --- HERO CSS --- */
@@ -145,6 +195,92 @@ function Home() {
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(30px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- HİZMETLER BÖLÜMÜ CSS --- */
+        .services-section {
+          width: 100%;
+          padding: 120px 20px 100px 20px;
+        }
+
+        .services-container {
+          max-width: 1000px;
+          margin: 0 auto;
+        }
+
+        .services-header {
+          text-align: center;
+          margin-bottom: 60px;
+          animation: fadeUp 0.8s ease-out forwards;
+        }
+
+        .services-title {
+          font-size: clamp(32px, 4vw, 42px);
+          color: #0B0B0B;
+          font-weight: 600;
+          letter-spacing: -1px;
+          margin-bottom: 16px;
+        }
+
+        .services-subtitle {
+          font-size: clamp(16px, 2vw, 18px);
+          color: #666666;
+          max-width: 600px;
+          margin: 0 auto;
+          line-height: 1.6;
+        }
+
+        .services-grid {
+          display: grid;
+          /* Kartları otomatik olarak sığdırır, mobilde alt alta atar */
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 30px;
+        }
+
+        .service-card {
+          background-color: #F8F9FA;
+          border: 1px solid #EAEAEA;
+          border-radius: 16px;
+          padding: 40px 30px;
+          transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+          cursor: default;
+        }
+
+        .service-card:hover {
+          background-color: #FFFFFF;
+          transform: translateY(-5px);
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.04);
+          border-color: #DEDEDE;
+        }
+
+        .service-icon-wrapper {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          background-color: #0B0B0B;
+          border-radius: 10px;
+          margin-bottom: 24px;
+        }
+
+        .service-icon {
+          color: #FFFFFF;
+          font-size: 18px;
+        }
+
+        .service-card-title {
+          font-size: 20px;
+          color: #0B0B0B;
+          font-weight: 700;
+          margin-bottom: 12px;
+          letter-spacing: -0.5px;
+        }
+
+        .service-card-desc {
+          font-size: 15px;
+          color: #666666;
+          line-height: 1.6;
         }
       `}</style>
     </div>

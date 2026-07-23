@@ -12,6 +12,14 @@
   "home": {
     "heroTitle": "Elevating Your Business in the Digital World",
     "heroSubtitle": "We add lasting value to your brand with clean, fast, and modern web solutions.",
-    "brandsLabel": "COMPANIES THAT TRUST US"
+    "brandsLabel": "COMPANIES THAT TRUST US",
+    "servicesTitle": "OUR WEB DESIGN SERVICES",
+    "servicesSubtitle": "Not just ordinary templates; we build modern, fast, and fully customized web architectures that will grow your business.",
+    "service1Title": "Corporate Web Design",
+    "service1Desc": "We design minimalist, responsive, and modern interfaces that reflect your brand's digital identity.",
+    "service2Title": "Custom Management Panels",
+    "service2Desc": "We develop fast, secure, and user-friendly backend systems that digitize your business processes and meet your specific needs.",
+    "service3Title": "QR Menu & Custom Systems",
+    "service3Desc": "We set up SEO-friendly, high-performance digital menu/catalog infrastructures for businesses, with custom pop-up notification support."
   }
 }

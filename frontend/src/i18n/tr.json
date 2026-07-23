@@ -12,6 +12,14 @@
   "home": {
     "heroTitle": "İşletmenizi Dijitalde Zirveye Taşıyoruz",
     "heroSubtitle": "Sade, hızlı ve modern web çözümleriyle markanıza kalıcı değer katıyoruz.",
-    "brandsLabel": "BİZE GÜVENENLER"
+    "brandsLabel": "BİZE GÜVENENLER",
+    "servicesTitle": "WEB TASARIM HİZMETLERİMİZ",
+    "servicesSubtitle": "Sıradan şablonlar değil; işletmenizi büyütecek, modern, hızlı ve tamamen size özel web mimarileri inşa ediyoruz.",
+    "service1Title": "Kurumsal Web Tasarım",
+    "service1Desc": "Markanızın dijital kimliğini yansıtan, minimalist, her ekranda kusursuz çalışan (responsive) ve modern arayüzler tasarlıyoruz.",
+    "service2Title": "Özel Yönetim Panelleri",
+    "service2Desc": "İş süreçlerinizi dijitalleştiren, ihtiyacınıza tam uyan hızlı, güvenli ve kullanımı kolay arka plan sistemleri geliştiriyoruz.",
+    "service3Title": "QR Menü & Özel Sistemler",
+    "service3Desc": "İşletmeler için SEO uyumlu, özel pop-up bildirim destekli ve yüksek performanslı dijital menü/katalog altyapıları kuruyoruz."
   }
 }
