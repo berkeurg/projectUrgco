@@ -362,49 +362,55 @@ function Home() {
           line-height: 1.7;
         }
 
-        /* --- MOBİL İÇİN STICKY SCROLL --- */
+        /* --- MOBİL İÇİN KUSURSUZ DÜZEN --- */
         @media (max-width: 992px) {
           .services-container {
-            display: block; 
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
           }
           
+          /* SOL PANEL: Mobilde yapışkan (sticky) özelliği iptal, normal akışta duracak */
           .services-left-panel {
-            position: sticky;
-            top: 80px; 
-            height: 50vh; /* Mobilde yüksekliği biraz kıstık ki obje çok aşağı taşmasın */
+            position: relative;
+            top: 0; 
+            height: auto; 
             z-index: 1; 
+            text-align: center; /* Mobilde yazıları ortalamak daha şık durur */
           }
           
           .services-3d-wrapper {
-            height: 25vh; /* 3D alanını mobilde daralttık */
+            /* vh yerine sabit px verdik ki kaydırırken adres çubuğu yüzünden boyut atlamasın */
+            height: 350px; 
             background-color: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-bottom: 30px;
           }
 
           .services-title {
             font-size: 32px; 
           }
+          
+          .services-subtitle {
+            margin: 0 auto; /* Ortalamayı dengelemek için */
+          }
 
+          /* SAĞ PANEL: Kartların kaydığı bölüm */
           .services-right-panel {
             position: relative;
             z-index: 2; 
-            margin-top: 5vh;
-            gap: 20vh; /* Kartların arasındaki boşluğu kıstık */
-            
-            /* SİHİRLİ DOKUNUŞ: En alt boşluğu 20vh'den 5vh'ye düşürdük.
-               Böylece son kart geldiğinde mor bölüm hemen arkasından yukarı çıkar ve taşıntıyı kapatır. */
-            padding-bottom: 5vh; 
+            margin-top: 0;
+            gap: 60px; /* Mobilde kartların arasındaki scroll mesafesini açtık */
+            padding-bottom: 40px; 
           }
 
+          /* KARTLAR: 3D objenin üstüne değil, doğrudan ekranın en üstüne yapışsın */
           .sticky-card {
             position: sticky;
-            top: 45vh; /* Mobilde kartlar 3D objenin tam bittiği yerde üst üste binsin */
+            top: 90px; /* Navbar'ın hemen altında üst üste birikecekler */
           }
           
           .service-card {
-            padding: 30px 20px; 
+            padding: 40px 20px; 
           }
         }
 
