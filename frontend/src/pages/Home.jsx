@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useInView } from 'react-intersection-observer';
 
 // Admin paneli (DB) gelene kadar kullanacağımız Mock Data
 const partnerLogos = [
@@ -12,12 +13,21 @@ const partnerLogos = [
 function Home() {
   const { t } = useTranslation();
 
+  // --- GÖRÜNÜRLÜK GÖZLEMCİLERİ (SCROLL ANİMASYONLARI) ---
+  const { ref: heroRef, inView: heroInView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const { ref: brandsRef, inView: brandsInView } = useInView({ triggerOnce: true, threshold: 0.2 });
+  const { ref: servicesRef, inView: servicesInView } = useInView({ triggerOnce: true, threshold: 0.2 });
+  const { ref: contactRef, inView: contactInView } = useInView({ triggerOnce: true, threshold: 0.2 });
+
   return (
     <div style={{ minHeight: 'calc(100vh - 80px)', display: 'flex', flexDirection: 'column' }}>
       
       {/* --- HERO İÇERİK BÖLÜMÜ --- */}
       <section className="hero-section">
-        <div className="hero-content">
+        <div 
+          ref={heroRef}
+          className={`hero-content scroll-fade ${heroInView ? 'animate-up' : ''}`}
+        >
           <h1 className="hero-title">
             {t('home.heroTitle')}
           </h1>
@@ -29,7 +39,10 @@ function Home() {
 
       {/* --- YENİ: SABİT MARKA IZGARASI (GRID) --- */}
       <section className="brands-section">
-        <div className="brands-container">
+        <div 
+          ref={brandsRef}
+          className={`brands-container scroll-fade ${brandsInView ? 'animate-up' : ''}`}
+        >
           
           <p className="brands-label">{t('home.brandsLabel')}</p>
           
@@ -52,7 +65,10 @@ function Home() {
 
       {/* --- WEB TASARIM HİZMETLERİMİZ --- */}
       <section className="services-section">
-        <div className="services-container">
+        <div 
+          ref={servicesRef}
+          className={`services-container scroll-fade ${servicesInView ? 'animate-up' : ''}`}
+        >
           
           <div className="services-header">
             <h2 className="services-title">{t('home.servicesTitle')}</h2>
@@ -102,7 +118,10 @@ function Home() {
 
       {/* --- İLETİŞİM (CTA) BÖLÜMÜ (TAM EKRAN SİYAH) --- */}
       <section className="contact-section-dark">
-        <div className="contact-container">
+        <div 
+          ref={contactRef}
+          className={`contact-container scroll-fade ${contactInView ? 'animate-up' : ''}`}
+        >
           <h2 className="contact-title">{t('home.contactTitle')}</h2>
           <p className="contact-subtitle">
             {t('home.contactSubtitle')}
@@ -115,7 +134,7 @@ function Home() {
             </a>
             
             {/* 2. Buton: Arama uygulamasına atar (Numarayı kendine göre değiştir) */}
-            <a href="https://wa.me/905332022073?text=Merhaba,%20web%20sitesi%20için%20bilgi%20almak%20istiyorum." className="contact-btn secondary-btn">
+            <a href="https://wa.me/905332022073?text=Merhaba,%20web%20sitesi%20için%20bilgi%20almak%20istiyorum." className="contact-btn secondary-btn" target="_blank" rel="noopener noreferrer">
               {t('home.contactSecondaryBtn')}
             </a>
           </div>
@@ -124,6 +143,19 @@ function Home() {
 
       {/* SAYFA İÇİ STİLLER */}
       <style>{`
+        /* --- SCROLL ANİMASYON SINIFLARI --- */
+        .scroll-fade {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+          will-change: opacity, transform; 
+        }
+
+        .scroll-fade.animate-up {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
         /* --- HERO CSS --- */
         .hero-section {
           flex: 1; /* Ekranın üst kısmında boşluk dengelemesini sağlar */
@@ -141,7 +173,6 @@ function Home() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          animation: fadeUp 0.8s ease-out forwards;
         }
 
         .hero-title {
@@ -214,11 +245,6 @@ function Home() {
           object-fit: contain;
         }
 
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
         /* --- HİZMETLER BÖLÜMÜ CSS --- */
         .services-section {
           width: 100%;
@@ -233,7 +259,6 @@ function Home() {
         .services-header {
           text-align: center;
           margin-bottom: 60px;
-          animation: fadeUp 0.8s ease-out forwards;
         }
 
         .services-title {
