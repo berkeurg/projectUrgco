@@ -25,5 +25,9 @@
     "contactSubtitle": "İşletmenizi dijitalde büyütmek ve modern teknolojilerle tanıştırmak için kahve içmeye ne dersiniz?",
     "contactPrimaryBtn": "Teklif Al",
     "contactSecondaryBtn": "İletişim"
+  },
+  "about": {
+    "heroTitle": "Vizyon. Teknoloji. Performans.",
+    "heroSubtitle": "Dijital dünyayı mühendislik disipliniyle, sıfırdan ve kusursuzca inşa ediyoruz. Bizler, kodun arkasındaki vizyonuz."
   }
 }

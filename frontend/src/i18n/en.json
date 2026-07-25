@@ -25,5 +25,9 @@
     "contactSubtitle": "How about having a coffee to grow your business digitally and introduce you to modern technologies?",
     "contactPrimaryBtn": "Get a Quote",
     "contactSecondaryBtn": "Contact Us"
+  },
+  "about": {
+    "heroTitle": "Vision. Technology. Performance.",
+    "heroSubtitle": "We build the digital world with engineering discipline, from scratch and flawlessly. We are the vision behind the code."
   }
 }
