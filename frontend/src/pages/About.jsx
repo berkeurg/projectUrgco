@@ -37,6 +37,7 @@ const useTypewriter = (text, speed = 50, delay = 0, startTyping = true) => {
 };
 
 // --- MİLİMETRİK KALİBRE DİJİTAL AĞ DEVRESİ ---
+// --- MİLİMETRİK VE MOBİL UYUMLU DİJİTAL AĞ DEVRESİ ---
 function CircuitBackground() {
   const canvasRef = useRef(null);
 
@@ -46,7 +47,9 @@ function CircuitBackground() {
     let animationFrameId;
 
     let particles = [];
-    const numParticles = 180; 
+    // MOBİL OPTİMİZASYONU: Ekran boyutuna göre düğüm sayısını belirliyoruz (Mobilde 90, Masada 180)
+    const isMobile = window.innerWidth < 768;
+    const numParticles = isMobile ? 90 : 180; 
     let mouse = { x: -1000, y: -1000 };
 
     const resize = () => {
@@ -60,12 +63,15 @@ function CircuitBackground() {
 
     const initParticles = () => {
       particles = [];
+      // MOBİL OPTİMİZASYONU: Mobilde hızları (vx, vy) daha sakin ve yavaşlatılmış tutuyoruz
+      const speedMultiplier = isMobile ? 0.08 : 0.15;
+
       for (let i = 0; i < numParticles; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.15,
-          vy: (Math.random() - 0.5) * 0.15,
+          vx: (Math.random() - 0.5) * speedMultiplier,
+          vy: (Math.random() - 0.5) * speedMultiplier,
           radius: Math.random() * 1.5 + 0.5 
         });
       }
@@ -84,6 +90,18 @@ function CircuitBackground() {
       mouse.x = (e.clientX - rect.left) * scaleX;
       mouse.y = (e.clientY - rect.top) * scaleY;
     };
+
+    // MOBİL DOKUNMATİK DESTEĞİ: Parmağın ekrandaki hareketini algılama
+    const handleTouchMove = (e) => {
+      if (!canvas || !e.touches[0]) return;
+      
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+
+      mouse.x = (e.touches[0].clientX - rect.left) * scaleX;
+      mouse.y = (e.touches[0].clientY - rect.top) * scaleY;
+    };
     
     const handleMouseLeave = () => {
       mouse.x = -1000;
@@ -91,7 +109,9 @@ function CircuitBackground() {
     };
     
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('mouseleave', handleMouseLeave);
+    window.addEventListener('touchend', handleMouseLeave);
 
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -109,11 +129,14 @@ function CircuitBackground() {
         const dyMouse = mouse.y - p.y;
         const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
 
-        if (distMouse < 180) {
+        // MOBİL OPTİMİZASYONU: Etkileşim mesafesini mobilde biraz daraltıyoruz (Aşırı tepkiyi önlemek için)
+        const interactionRadius = isMobile ? 120 : 180;
+
+        if (distMouse < interactionRadius) {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = `rgba(116, 38, 176, ${(1 - distMouse / 180) * 0.25})`; 
+          ctx.strokeStyle = `rgba(116, 38, 176, ${(1 - distMouse / interactionRadius) * 0.25})`; 
           ctx.lineWidth = 1;
           ctx.stroke();
         }
@@ -129,11 +152,13 @@ function CircuitBackground() {
           const dy = p.y - p2.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 120) {
+          const linkRadius = isMobile ? 80 : 120;
+
+          if (dist < linkRadius) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(116, 38, 176, ${(1 - dist / 120) * 0.15})`;
+            ctx.strokeStyle = `rgba(116, 38, 176, ${(1 - dist / linkRadius) * 0.15})`;
             ctx.lineWidth = 0.6;
             ctx.stroke();
           }
@@ -147,7 +172,9 @@ function CircuitBackground() {
     return () => {
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('mouseleave', handleMouseLeave);
+      window.removeEventListener('touchend', handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
