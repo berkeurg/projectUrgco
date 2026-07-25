@@ -164,7 +164,6 @@ function TheCoreSection() {
   const containerRef = useRef(null);
   const trackRef = useRef(null);
   
-  // YENİ: İlgili metinleri çekmek için çeviri kancamızı çağırıyoruz
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -175,19 +174,21 @@ function TheCoreSection() {
       const track = trackRef.current;
 
       const rect = container.getBoundingClientRect();
+      const offset = 80 + (window.innerHeight * 0.05); 
+      
       const maxScrollY = container.scrollHeight - window.innerHeight;
-      const scrollY = -rect.top;
+      const scrollY = offset - rect.top;
 
       if (scrollY >= 0 && scrollY <= maxScrollY) {
         const percentage = scrollY / maxScrollY;
-        const maxTranslateX = track.scrollWidth - window.innerWidth;
+        const maxTranslateX = track.scrollWidth - track.parentElement.clientWidth;
         track.style.transform = `translateX(-${maxTranslateX * percentage}px)`;
       } 
       else if (scrollY < 0) {
         track.style.transform = `translateX(0px)`;
       } 
       else {
-        const maxTranslateX = track.scrollWidth - window.innerWidth;
+        const maxTranslateX = track.scrollWidth - track.parentElement.clientWidth;
         track.style.transform = `translateX(-${maxTranslateX}px)`;
       }
     };
@@ -203,28 +204,24 @@ function TheCoreSection() {
       <div className="core-sticky">
         
         <div className="core-intro">
-          {/* YENİ: Dinamik çeviri değişkenleri */}
           <span className="core-badge">{t('about.core.badge')}</span>
           <h2 className="core-heading">{t('about.core.heading')}</h2>
         </div>
 
         <div ref={trackRef} className="core-track">
           
-          {/* KART 01 */}
           <div className="core-card">
             <span className="core-number">01</span>
             <h3 className="core-title">{t('about.core.card1.title')}</h3>
             <p className="core-text">{t('about.core.card1.text')}</p>
           </div>
 
-          {/* KART 02 */}
           <div className="core-card">
             <span className="core-number">02</span>
             <h3 className="core-title">{t('about.core.card2.title')}</h3>
             <p className="core-text">{t('about.core.card2.text')}</p>
           </div>
 
-          {/* KART 03 */}
           <div className="core-card">
             <span className="core-number">03</span>
             <h3 className="core-title">{t('about.core.card3.title')}</h3>
@@ -335,7 +332,7 @@ export default function About() {
         }
 
         .cursor {
-          display: inline-block;
+          display: inline-bottom;
           color: #7426B0;
           animation: blink 1s step-end infinite;
           margin-left: 5px;
@@ -346,27 +343,33 @@ export default function About() {
           50% { opacity: 0; }
         }
 
+        /* --- THE CORE YATAY KAYDIRMA CSS --- */
+        
         .core-container {
           position: relative;
           height: 300vh; 
-          background-color: #030303; 
+          background-color: transparent; 
           color: #FFFFFF;
         }
 
         .core-sticky {
           position: sticky;
-          top: 0;
-          height: 100vh; 
-          width: 100%;
+          top: calc(80px + 3vh); 
+          height: calc(100vh - 80px - 6vh); 
+          width: 95%; 
+          margin: 0 auto; 
+          background-color: #030303; 
+          border-radius: 40px; 
           display: flex;
           flex-direction: column;
           justify-content: center;
           overflow: hidden; 
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); 
         }
 
         .core-intro {
           position: absolute;
-          top: 10vh;
+          top: 40px;
           left: 5vw;
           z-index: 10;
         }
@@ -385,13 +388,14 @@ export default function About() {
           font-size: clamp(32px, 5vw, 64px);
           font-weight: 800;
           color: #FFFFFF;
+          margin: 0; 
         }
 
         .core-track {
           display: flex;
           align-items: center;
           gap: 15vw; 
-          padding-left: 50vw; 
+          padding-left: 55vw; 
           padding-right: 20vw; 
           width: fit-content;
           will-change: transform; 
@@ -403,15 +407,28 @@ export default function About() {
           flex-shrink: 0; 
           display: flex;
           flex-direction: column;
+          cursor: default;
+          padding-top: 60px; 
         }
 
         .core-number {
           font-size: clamp(60px, 10vw, 120px);
           font-weight: 900;
           color: transparent;
-          -webkit-text-stroke: 2px rgba(116, 38, 176, 0.3);
+          -webkit-text-stroke: 2px #7426B0;
           line-height: 1;
           margin-bottom: -15px; 
+          display: inline-block;
+          transition: text-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+          width: fit-content; 
+        }
+
+        .core-number:hover {
+          text-shadow: 
+            0 0 20px rgba(116, 38, 176, 0.9),
+            0 0 40px rgba(116, 38, 176, 0.7),
+            0 0 70px rgba(116, 38, 176, 0.5),
+            0 0 100px rgba(116, 38, 176, 0.3);
         }
 
         .core-card .core-title {
@@ -427,6 +444,44 @@ export default function About() {
           color: #A0A0A0;
           line-height: 1.8;
           font-weight: 300;
+        }
+
+        /* --- MOBİL UYUMLULUK DÜZELTMELERİ --- */
+        @media (max-width: 768px) {
+          .core-sticky {
+            /* Mobilde siyah cover alanını küçülterek ferah ve kompakt hale getirdik */
+            height: 75vh;
+            top: calc(80px + 2vh);
+            border-radius: 24px;
+            width: 92%;
+          }
+
+          .core-intro {
+            /* Üst başlıkları mobilde tamamen ortaladık */
+            position: relative;
+            top: auto;
+            left: auto;
+            text-align: center;
+            padding: 0px 20px 0 20px;
+            width: 100%;
+          }
+
+          .core-track {
+            /* Mobilde kartların hizalanması ve boşlukları */
+            padding-left: 30vw;
+            gap: 10vw;
+            padding-top: 10px;
+          }
+
+          .core-card {
+            width: 80vw;
+            padding-top: 20px;
+          }
+
+          .core-number {
+            /* Mobilde numara ile alt başlık çakışmasını önlemek için boşluk bırakıldı */
+            margin-bottom: 10px;
+          }
         }
       `}</style>
     </div>
