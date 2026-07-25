@@ -28,6 +28,22 @@
   },
   "about": {
     "heroTitle": "Vision. Technology. Performance.",
-    "heroSubtitle": "We build the digital world with engineering discipline, from scratch and flawlessly. We are the vision behind the code."
+    "heroSubtitle": "We build the digital world with engineering discipline, from scratch and flawlessly. We are the vision behind the code.",
+    "core": {
+      "badge": "OUR PHILOSOPHY",
+      "heading": "The Core",
+      "card1": {
+        "title": "Architecture.",
+        "text": "We move beyond ready-made templates and flexibility-limiting boundaries. We build our projects on normalized relational database designs and scalable, robust system architectures."
+      },
+      "card2": {
+        "title": "Interface.",
+        "text": "The final pixel that meets the user must be as fluid as the engineering behind it. Using component-based modern frameworks, we transform static pages into dynamic digital experiences that react in milliseconds."
+      },
+      "card3": {
+        "title": "Performance.",
+        "text": "We develop products that don't just 'work', but utilize hardware in the most efficient way. We design high-performance systems where time complexity is algorithmically optimized and freed from unnecessary processing loads."
+      }
+    }
   }
 }

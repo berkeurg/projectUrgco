@@ -28,6 +28,22 @@
   },
   "about": {
     "heroTitle": "Vizyon. Teknoloji. Performans.",
-    "heroSubtitle": "Dijital dünyayı mühendislik disipliniyle, sıfırdan ve kusursuzca inşa ediyoruz. Bizler, kodun arkasındaki vizyonuz."
+    "heroSubtitle": "Dijital dünyayı mühendislik disipliniyle, sıfırdan ve kusursuzca inşa ediyoruz. Bizler, kodun arkasındaki vizyonuz.",
+    "core": {
+      "badge": "FELSEFEMİZ",
+      "heading": "The Core",
+      "card1": {
+        "title": "Mimari.",
+        "text": "Hazır şablonların ve esnekliği kısıtlayan sınırların ötesine geçiyoruz. Projelerimizi; normalize edilmiş ilişkisel veritabanı tasarımları ve ölçeklenebilir, sağlam sistem mimarileri üzerine inşa ediyoruz."
+      },
+      "card2": {
+        "title": "Arayüz.",
+        "text": "Kullanıcıyla buluşan son piksel, arkasındaki mühendislik kadar akıcı olmalıdır. Bileşen tabanlı modern frameworkler kullanarak, statik sayfaları milisaniyeler içinde tepki veren dinamik dijital deneyimlere dönüştürüyoruz."
+      },
+      "card3": {
+        "title": "Performans.",
+        "text": "Sadece \"çalışan\" değil, donanımı en verimli şekilde kullanan ürünler geliştiriyoruz. Zaman karmaşıklığı algoritmik olarak optimize edilmiş, gereksiz işlem yüklerinden arındırılmış yüksek performanslı sistemler tasarlıyoruz."
+      }
+    }
   }
 }

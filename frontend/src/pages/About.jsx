@@ -36,8 +36,7 @@ const useTypewriter = (text, speed = 50, delay = 0, startTyping = true) => {
   return { displayedText, isFinished };
 };
 
-// --- ÖZGÜR BIRAKILMIŞ, ZARİF DİJİTAL AĞ DEVRESİ ---
-// --- ÖZGÜR BIRAKILMIŞ, MİLİMETRİK KALİBRE DİJİTAL AĞ DEVRESİ ---
+// --- MİLİMETRİK KALİBRE DİJİTAL AĞ DEVRESİ ---
 function CircuitBackground() {
   const canvasRef = useRef(null);
 
@@ -78,14 +77,10 @@ function CircuitBackground() {
     const handleMouseMove = (e) => {
       if (!canvas) return;
       
-      // SİHİRLİ MATEMATİK: Canvas'ın ekrandaki gerçek kapladığı alanı alıyoruz
       const rect = canvas.getBoundingClientRect();
-      
-      // CSS boyutu ile Canvas'ın iç piksel çözünürlüğü arasındaki oranı (scale) hesaplıyoruz
       const scaleX = canvas.width / rect.width;
       const scaleY = canvas.height / rect.height;
 
-      // Farenin konumunu, ekran sapmalarını (rect.left/top) çıkarıp bu oranla çarpıyoruz
       mouse.x = (e.clientX - rect.left) * scaleX;
       mouse.y = (e.clientY - rect.top) * scaleY;
     };
@@ -95,8 +90,6 @@ function CircuitBackground() {
       mouse.y = -1000;
     };
     
-    // KESİN ÇÖZÜM 2: Etkileşimi tekrar tüm 'window' (pencere) üzerine alıyoruz.
-    // Böylece fare yazıların üstünden geçse bile Canvas takibi asla bırakmıyor.
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseleave', handleMouseLeave);
 
@@ -166,6 +159,84 @@ function CircuitBackground() {
   );
 }
 
+// --- THE CORE: YATAY KAYDIRMA (HORIZONTAL SCROLL) BİLEŞENİ ---
+function TheCoreSection() {
+  const containerRef = useRef(null);
+  const trackRef = useRef(null);
+  
+  // YENİ: İlgili metinleri çekmek için çeviri kancamızı çağırıyoruz
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current || !trackRef.current) return;
+
+      const container = containerRef.current;
+      const track = trackRef.current;
+
+      const rect = container.getBoundingClientRect();
+      const maxScrollY = container.scrollHeight - window.innerHeight;
+      const scrollY = -rect.top;
+
+      if (scrollY >= 0 && scrollY <= maxScrollY) {
+        const percentage = scrollY / maxScrollY;
+        const maxTranslateX = track.scrollWidth - window.innerWidth;
+        track.style.transform = `translateX(-${maxTranslateX * percentage}px)`;
+      } 
+      else if (scrollY < 0) {
+        track.style.transform = `translateX(0px)`;
+      } 
+      else {
+        const maxTranslateX = track.scrollWidth - window.innerWidth;
+        track.style.transform = `translateX(-${maxTranslateX}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    setTimeout(handleScroll, 0); 
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <section ref={containerRef} className="core-container">
+      <div className="core-sticky">
+        
+        <div className="core-intro">
+          {/* YENİ: Dinamik çeviri değişkenleri */}
+          <span className="core-badge">{t('about.core.badge')}</span>
+          <h2 className="core-heading">{t('about.core.heading')}</h2>
+        </div>
+
+        <div ref={trackRef} className="core-track">
+          
+          {/* KART 01 */}
+          <div className="core-card">
+            <span className="core-number">01</span>
+            <h3 className="core-title">{t('about.core.card1.title')}</h3>
+            <p className="core-text">{t('about.core.card1.text')}</p>
+          </div>
+
+          {/* KART 02 */}
+          <div className="core-card">
+            <span className="core-number">02</span>
+            <h3 className="core-title">{t('about.core.card2.title')}</h3>
+            <p className="core-text">{t('about.core.card2.text')}</p>
+          </div>
+
+          {/* KART 03 */}
+          <div className="core-card">
+            <span className="core-number">03</span>
+            <h3 className="core-title">{t('about.core.card3.title')}</h3>
+            <p className="core-text">{t('about.core.card3.text')}</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function About() {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
@@ -179,51 +250,52 @@ export default function About() {
   return (
     <div className="about-page" key={currentLang}>
       
-      {/* Özgür bırakılmış, tam ekran devre ağı */}
-      <CircuitBackground />
-      
-      {/* --- HERO SECTION YAZILARI --- */}
-      <section className="about-hero">
-        <div className="about-hero-content">
-          <h1 className="about-hero-title">
-            {titleDisplay}
-            {!titleFinished && <span className="cursor">|</span>}
-          </h1>
-          <p className="about-hero-subtitle">
-            {subtitleDisplay}
-            {titleFinished && <span className="cursor">|</span>}
-          </p>
+      {/* --- HERO SECTION --- */}
+      <section className="hero-section">
+        <CircuitBackground />
+        <div className="about-hero">
+          <div className="about-hero-content">
+            <h1 className="about-hero-title">
+              {titleDisplay}
+              {!titleFinished && <span className="cursor">|</span>}
+            </h1>
+            <p className="about-hero-subtitle">
+              {subtitleDisplay}
+              {titleFinished && <span className="cursor">|</span>}
+            </p>
+          </div>
         </div>
       </section>
 
+      {/* --- THE CORE (YATAY KAYDIRMA) SECTION --- */}
+      <TheCoreSection />
+
       {/* --- SAYFA İÇİ CSS --- */}
       <style>{`
-        /* --- SAYFA İÇİ CSS --- */
         .about-page {
-          position: relative;
           background-color: transparent; 
-          /* SİHİRLİ DOKUNUŞ 1: Navbar yüksekliğini (yaklaşık 80px) 100vh'den çıkartıyoruz */
-          min-height: calc(100vh - 80px);
           width: 100%;
-          /* Kapsayıcının kendisini flex yapıp her şeyi kusursuz ortalıyoruz */
+        }
+
+        .hero-section {
+          position: relative;
+          width: 100%;
+          height: calc(100vh - 80px); 
           display: flex;
-          align-items: center; 
+          align-items: center;
           justify-content: center;
-          overflow: hidden;
+          overflow: hidden; 
         }
 
         .canvas-wrapper {
           position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
           z-index: 1;
         } 
 
         .circuit-canvas {
-          width: 100%;
-          height: 100%;
+          width: 100%; height: 100%;
           display: block; 
         }
 
@@ -231,12 +303,10 @@ export default function About() {
           position: relative;
           z-index: 2; 
           width: 100%;
-          /* SİHİRLİ DOKUNUŞ 2: Yüksekliği sildik, sadece içeriği saran bir yapıya geçtik */
           display: flex;
           align-items: center;
           justify-content: center;
           pointer-events: none; 
-          /* SİHİRLİ DOKUNUŞ 3: İnsan gözünün optik merkezi için yazıyı çok hafif yukarı itiyoruz */
           margin-top: -5vh; 
         }
 
@@ -253,7 +323,7 @@ export default function About() {
           letter-spacing: -2px;
           margin-bottom: 24px;
           color: #080808;
-          min-height: 1.2em; /* Metin yazılırken satırın zıplamasını engeller */
+          min-height: 1.2em;
         }
 
         .about-hero-subtitle {
@@ -261,7 +331,7 @@ export default function About() {
           color: #626262;
           line-height: 1.8;
           font-weight: 300;
-          min-height: 3em; /* Metin yazılırken satırın zıplamasını engeller */
+          min-height: 3em;
         }
 
         .cursor {
@@ -274,6 +344,89 @@ export default function About() {
         @keyframes blink {
           0%, 100% { opacity: 1; }
           50% { opacity: 0; }
+        }
+
+        .core-container {
+          position: relative;
+          height: 300vh; 
+          background-color: #030303; 
+          color: #FFFFFF;
+        }
+
+        .core-sticky {
+          position: sticky;
+          top: 0;
+          height: 100vh; 
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          overflow: hidden; 
+        }
+
+        .core-intro {
+          position: absolute;
+          top: 10vh;
+          left: 5vw;
+          z-index: 10;
+        }
+
+        .core-badge {
+          display: inline-block;
+          font-size: 14px;
+          font-weight: 600;
+          letter-spacing: 2px;
+          color: #7426B0;
+          text-transform: uppercase;
+          margin-bottom: 10px;
+        }
+
+        .core-heading {
+          font-size: clamp(32px, 5vw, 64px);
+          font-weight: 800;
+          color: #FFFFFF;
+        }
+
+        .core-track {
+          display: flex;
+          align-items: center;
+          gap: 15vw; 
+          padding-left: 50vw; 
+          padding-right: 20vw; 
+          width: fit-content;
+          will-change: transform; 
+        }
+
+        .core-card {
+          width: 70vw;
+          max-width: 550px;
+          flex-shrink: 0; 
+          display: flex;
+          flex-direction: column;
+        }
+
+        .core-number {
+          font-size: clamp(60px, 10vw, 120px);
+          font-weight: 900;
+          color: transparent;
+          -webkit-text-stroke: 2px rgba(116, 38, 176, 0.3);
+          line-height: 1;
+          margin-bottom: -15px; 
+        }
+
+        .core-card .core-title {
+          font-size: clamp(28px, 4vw, 42px);
+          font-weight: 700;
+          margin-bottom: 20px;
+          color: #FFFFFF;
+          z-index: 2; 
+        }
+
+        .core-card .core-text {
+          font-size: clamp(16px, 1.5vw, 20px);
+          color: #A0A0A0;
+          line-height: 1.8;
+          font-weight: 300;
         }
       `}</style>
     </div>
