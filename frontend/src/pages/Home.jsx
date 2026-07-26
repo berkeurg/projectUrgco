@@ -136,7 +136,7 @@ function Home() {
           
           <div className="contact-actions">
             {/* 1. Buton: Mail uygulamasına atar */}
-            <a href="mailto:iletisim@urgco.com" className="contact-btn primary-btn">
+            <a href="mailto:iletisim@urgco.tr" className="contact-btn primary-btn">
               {t('home.contactPrimaryBtn')}
             </a>
             

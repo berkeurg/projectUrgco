@@ -43,7 +43,10 @@
       "card3": {
         "title": "Performance.",
         "text": "We develop products that don't just 'work', but utilize hardware in the most efficient way. We design high-performance systems where time complexity is algorithmically optimized and freed from unnecessary processing loads."
-      }
+      }},
+    "tech": {
+      "badge": "INFRASTRUCTURE & STACK",
+      "heading": "System Initializing"
     }
   }
 }

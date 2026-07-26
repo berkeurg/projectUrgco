@@ -36,7 +36,6 @@ const useTypewriter = (text, speed = 50, delay = 0, startTyping = true) => {
   return { displayedText, isFinished };
 };
 
-// --- MİLİMETRİK KALİBRE DİJİTAL AĞ DEVRESİ ---
 // --- MİLİMETRİK VE MOBİL UYUMLU DİJİTAL AĞ DEVRESİ ---
 function CircuitBackground() {
   const canvasRef = useRef(null);
@@ -47,7 +46,6 @@ function CircuitBackground() {
     let animationFrameId;
 
     let particles = [];
-    // MOBİL OPTİMİZASYONU: Ekran boyutuna göre düğüm sayısını belirliyoruz (Mobilde 90, Masada 180)
     const isMobile = window.innerWidth < 768;
     const numParticles = isMobile ? 90 : 180; 
     let mouse = { x: -1000, y: -1000 };
@@ -63,7 +61,6 @@ function CircuitBackground() {
 
     const initParticles = () => {
       particles = [];
-      // MOBİL OPTİMİZASYONU: Mobilde hızları (vx, vy) daha sakin ve yavaşlatılmış tutuyoruz
       const speedMultiplier = isMobile ? 0.08 : 0.15;
 
       for (let i = 0; i < numParticles; i++) {
@@ -91,7 +88,6 @@ function CircuitBackground() {
       mouse.y = (e.clientY - rect.top) * scaleY;
     };
 
-    // MOBİL DOKUNMATİK DESTEĞİ: Parmağın ekrandaki hareketini algılama
     const handleTouchMove = (e) => {
       if (!canvas || !e.touches[0]) return;
       
@@ -129,7 +125,6 @@ function CircuitBackground() {
         const dyMouse = mouse.y - p.y;
         const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
 
-        // MOBİL OPTİMİZASYONU: Etkileşim mesafesini mobilde biraz daraltıyoruz (Aşırı tepkiyi önlemek için)
         const interactionRadius = isMobile ? 120 : 180;
 
         if (distMouse < interactionRadius) {
@@ -261,6 +256,102 @@ function TheCoreSection() {
   );
 }
 
+// --- YENİ: TERMİNAL / BAŞLATMA SEKANSI (BOOT SEQUENCE) BİLEŞENİ ---
+// --- TERMİNAL / BAŞLATMA SEKANSI (BOOT SEQUENCE) BİLEŞENİ ---
+// --- TERMİNAL / BAŞLATMA SEKANSI (BOOT SEQUENCE) BİLEŞENİ ---
+function TerminalTechSection() {
+  const { t } = useTranslation();
+  const containerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [activeLines, setActiveLines] = useState([]);
+
+  // Kendi yeteneklerine göre tam kalibre edilmiş sistem sekansı
+  const bootSequence = [
+    { type: "cmd", text: "urgco system.init --mode=\"engineering_discipline\"" },
+    { type: "sys", text: "<span class='term-status'>[OK]</span> Core Engine Loaded." },
+    { type: "sys", text: "<span class='term-status'>[OK]</span> Network & Infrastructure Online... <span class='term-hl'>[CLOUDFLARE]</span>" },
+    { type: "sys", text: "<span class='term-status'>[OK]</span> Frontend Subsystems Initialized... <span class='term-hl'>[REACT, HTML/CSS, JS, I18N]</span>" },
+    { type: "sys", text: "<span class='term-status'>[OK]</span> Backend Architecture Deployed... <span class='term-hl'>[NODE.JS, PHP, XAMPP]</span>" },
+    { type: "sys", text: "<span class='term-status'>[OK]</span> Relational Databases Connected... <span class='term-hl'>[ORACLE SQL, MYSQL]</span>" },
+    { type: "sys", text: "<span class='term-status'>[OK]</span> Mobile Cross-Platform Compiled... <span class='term-hl'>[FLUTTER, DART]</span>" },
+    { type: "sys", text: "<span class='term-status'>[OK]</span> 3D & Creative Render Engines Active... <span class='term-hl'>[REACT 3D FIBER, PHOTOSHOP]</span>" },
+    { type: "success", text: "SYSTEM FULLY OPERATIONAL. READY TO BUILD." }
+  ];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.4 } 
+    );
+    
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+    
+    return () => {
+      if (containerRef.current) observer.unobserve(containerRef.current);
+    };
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    let timeouts = [];
+    bootSequence.forEach((line, index) => {
+      const delay = index === 0 ? 500 : 500 + (index * 400); 
+      
+      const timeout = setTimeout(() => {
+        setActiveLines(prev => [...prev, line]);
+      }, delay);
+      
+      timeouts.push(timeout);
+    });
+
+    return () => timeouts.forEach(clearTimeout);
+  }, [isVisible]);
+
+  return (
+    <section ref={containerRef} className="terminal-container">
+      
+      <div className="terminal-header">
+        <span className="terminal-badge">{t('about.tech.badge')}</span>
+        <h2 className="terminal-heading">{t('about.tech.heading')}</h2>
+      </div>
+
+      <div className="terminal-window">
+        <div className="terminal-top-bar">
+          <div className="mac-buttons">
+            <span className="mac-btn red"></span>
+            <span className="mac-btn yellow"></span>
+            <span className="mac-btn green"></span>
+          </div>
+          <span className="terminal-title">bash - urgco-core ~ {isVisible ? 'running' : 'idle'}</span>
+        </div>
+        
+        <div className="terminal-body">
+          {activeLines.map((line, index) => (
+            <div key={index} className={`terminal-line ${line.type}`}>
+              {line.type === "cmd" && <span className="terminal-prompt">~ %</span>}
+              <span className="terminal-text" dangerouslySetInnerHTML={{ __html: line.text }}></span>
+            </div>
+          ))}
+          
+          <div className="terminal-line">
+            <span className="terminal-prompt">~ %</span>
+            <span className="terminal-cursor"></span>
+          </div>
+        </div>
+      </div>
+      
+    </section>
+  );
+}
+
+
 export default function About() {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
@@ -294,6 +385,9 @@ export default function About() {
       {/* --- THE CORE (YATAY KAYDIRMA) SECTION --- */}
       <TheCoreSection />
 
+      {/* --- YENİ: TERMİNAL / BOOT SEQUENCE BÖLÜMÜ --- */}
+      <TerminalTechSection />
+
       {/* --- SAYFA İÇİ CSS --- */}
       <style>{`
         .about-page {
@@ -301,6 +395,7 @@ export default function About() {
           width: 100%;
         }
 
+        /* --- HERO CSS --- */
         .hero-section {
           position: relative;
           width: 100%;
@@ -473,10 +568,150 @@ export default function About() {
           font-weight: 300;
         }
 
+        /* --- YENİ: TERMİNAL / BOOT SEQUENCE CSS --- */
+        
+        .terminal-container {
+          padding: 120px 5vw;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          max-width: 1000px;
+          margin: 0 auto;
+        }
+
+        .terminal-header {
+          text-align: center;
+          margin-bottom: 60px;
+        }
+
+        .terminal-badge {
+          display: inline-block;
+          font-size: 14px;
+          font-weight: 600;
+          letter-spacing: 2px;
+          color: #7426B0;
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+
+        .terminal-heading {
+          font-size: clamp(32px, 5vw, 56px);
+          font-weight: 800;
+          color: #080808;
+          margin: 0;
+          letter-spacing: -1px;
+        }
+
+        /* Terminal Penceresi Tasarımı */
+        .terminal-window {
+          width: 100%;
+          background: #060606; /* Derin terminal siyahı */
+          border: 1px solid rgba(116, 38, 176, 0.2); /* Etrafında hafif mor ışıma */
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(116, 38, 176, 0.05);
+          /* Kod fontu zorunlu. Eğer Fira Code yoksa Courier New kullanır */
+          font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+        }
+
+        /* Mac OS Tarzı Üst Çubuk */
+        .terminal-top-bar {
+          background: #121212;
+          padding: 12px 20px;
+          display: flex;
+          align-items: center;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          position: relative;
+        }
+
+        .mac-buttons {
+          display: flex;
+          gap: 8px;
+        }
+
+        .mac-btn {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+        }
+
+        .mac-btn.red { background: #FF5F56; }
+        .mac-btn.yellow { background: #FFBD2E; }
+        .mac-btn.green { background: #27C93F; }
+
+        .terminal-title {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          color: #666666;
+          font-size: 13px;
+          font-weight: 500;
+        }
+
+        /* Terminal İçeriği */
+        .terminal-body {
+          padding: 30px;
+          min-height: 350px; /* Boot olmadan önce ekran küçük kalmasın diye */
+        }
+
+        .terminal-line {
+          display: flex;
+          margin-bottom: 12px;
+          font-size: clamp(14px, 2vw, 16px);
+          line-height: 1.6;
+        }
+
+        .terminal-prompt {
+          color: #7426B0; /* Mor komut imleci */
+          margin-right: 15px;
+          font-weight: bold;
+        }
+
+        .terminal-text {
+          color: #A0A0A0; /* Gri standart terminal çıktısı */
+        }
+
+        /* Sınıflandırılmış Çıktı Renklendirmeleri */
+        .terminal-line.cmd .terminal-text {
+          color: #FFFFFF; /* Kullanıcı komutu beyaz olur */
+        }
+
+        .terminal-line.success .terminal-text {
+          color: #7426B0; /* En son onay mesajı güçlü mor */
+          font-weight: bold;
+          margin-top: 20px; /* Son satırdan önce boşluk */
+        }
+
+        /* JSON içindeki span elementlerine uygulanan CSS sınıfları */
+        .term-status {
+          color: #27C93F; /* Yeşil [OK] ibaresi */
+          font-weight: bold;
+          margin-right: 8px;
+        }
+
+        .term-hl {
+          color: #FFFFFF; /* Vurgulanan teknolojiler bembeyaz parlar */
+          font-weight: bold;
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Yanıp Sönen Blok İmleç */
+        .terminal-cursor {
+          display: inline-block;
+          width: 10px;
+          height: 1.2em;
+          background: #7426B0;
+          animation: terminal-blink 1s step-end infinite;
+        }
+
+        @keyframes terminal-blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+
         /* --- MOBİL UYUMLULUK DÜZELTMELERİ --- */
         @media (max-width: 768px) {
           .core-sticky {
-            /* Mobilde siyah cover alanını küçülterek ferah ve kompakt hale getirdik */
             height: 75vh;
             top: calc(80px + 2vh);
             border-radius: 24px;
@@ -484,7 +719,6 @@ export default function About() {
           }
 
           .core-intro {
-            /* Üst başlıkları mobilde tamamen ortaladık */
             position: relative;
             top: auto;
             left: auto;
@@ -494,7 +728,6 @@ export default function About() {
           }
 
           .core-track {
-            /* Mobilde kartların hizalanması ve boşlukları */
             padding-left: 30vw;
             gap: 10vw;
             padding-top: 10px;
@@ -506,8 +739,21 @@ export default function About() {
           }
 
           .core-number {
-            /* Mobilde numara ile alt başlık çakışmasını önlemek için boşluk bırakıldı */
             margin-bottom: 10px;
+          }
+
+          /* Mobil Terminal Düzeltmeleri */
+          .terminal-container {
+            padding: 80px 5vw;
+          }
+
+          .terminal-body {
+            padding: 20px;
+            min-height: 250px;
+          }
+
+          .terminal-title {
+            display: none; /* Mobilde yer darlığından dolayı title gizlenir */
           }
         }
       `}</style>

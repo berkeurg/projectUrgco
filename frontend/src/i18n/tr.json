@@ -43,7 +43,10 @@
       "card3": {
         "title": "Performans.",
         "text": "Sadece \"çalışan\" değil, donanımı en verimli şekilde kullanan ürünler geliştiriyoruz. Zaman karmaşıklığı algoritmik olarak optimize edilmiş, gereksiz işlem yüklerinden arındırılmış yüksek performanslı sistemler tasarlıyoruz."
-      }
+      }},
+    "tech": {
+      "badge": "ALTYAPI & STACK",
+      "heading": "Kullandığımız Teknolojiler"
+    }
     }
   }
-}
