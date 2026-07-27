@@ -47,6 +47,12 @@
     "tech": {
       "badge": "ALTYAPI & STACK",
       "heading": "Kullandığımız Teknolojiler"
+    },
+    "contact": {
+      "heading": "Bir projeniz mi var?",
+      "subtitle": "Kahvenizi alın ve detayları konuşalım. Size bir telefon kadar yakınız.",
+      "call": "BİZİ ARAYIN",
+      "email": "E-POSTA GÖNDERİN"
     }
     }
   }

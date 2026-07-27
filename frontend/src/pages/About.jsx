@@ -256,8 +256,6 @@ function TheCoreSection() {
   );
 }
 
-// --- YENİ: TERMİNAL / BAŞLATMA SEKANSI (BOOT SEQUENCE) BİLEŞENİ ---
-// --- TERMİNAL / BAŞLATMA SEKANSI (BOOT SEQUENCE) BİLEŞENİ ---
 // --- TERMİNAL / BAŞLATMA SEKANSI (BOOT SEQUENCE) BİLEŞENİ ---
 function TerminalTechSection() {
   const { t } = useTranslation();
@@ -265,7 +263,6 @@ function TerminalTechSection() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeLines, setActiveLines] = useState([]);
 
-  // Kendi yeteneklerine göre tam kalibre edilmiş sistem sekansı
   const bootSequence = [
     { type: "cmd", text: "urgco system.init --mode=\"engineering_discipline\"" },
     { type: "sys", text: "<span class='term-status'>[OK]</span> Core Engine Loaded." },
@@ -318,8 +315,8 @@ function TerminalTechSection() {
     <section ref={containerRef} className="terminal-container">
       
       <div className="terminal-header">
-        <span className="terminal-badge">{t('about.tech.badge')}</span>
-        <h2 className="terminal-heading">{t('about.tech.heading')}</h2>
+        <span className="terminal-badge">{t('about.tech.badge', 'ALTYAPI & STACK')}</span>
+        <h2 className="terminal-heading">{t('about.tech.heading', 'Sistem Başlatılıyor.')}</h2>
       </div>
 
       <div className="terminal-window">
@@ -347,6 +344,59 @@ function TerminalTechSection() {
         </div>
       </div>
       
+    </section>
+  );
+}
+
+// --- YENİ: TEMİZ, ŞIK VE ERİŞİLEBİLİR İLETİŞİM BİLEŞENİ ---
+// Terminalin karmaşasından çıkıp, "esnafın" bile tek bakışta anlayacağı premium ajans tasarımı.
+function ElegantContactSection() {
+  const { t } = useTranslation();
+  
+  // Sabit veriler
+  const contactEmail = "iletisim@urgco.tr"; 
+  const contactPhone = "+90 533 202 20 73"; 
+
+  return (
+    <section className="elegant-contact-container">
+      
+      {/* Yumuşak ve Davetkar Başlık */}
+      <div className="elegant-contact-header">
+        <h2 className="elegant-heading">{t('about.contact.heading', 'Bir projeniz mi var?')}</h2>
+        <p className="elegant-subtitle">{t('about.contact.subtitle', 'Kahvenizi alın ve detayları konuşalım. Size bir telefon kadar yakınız.')}</p>
+      </div>
+
+      {/* Tertemiz İletişim Kartları */}
+      <div className="elegant-cards-wrapper">
+        
+        {/* Telefon Kartı */}
+        <a href={`tel:${contactPhone.replace(/\s/g, '')}`} className="elegant-card">
+          <div className="elegant-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+          </div>
+          <div className="elegant-info">
+            <span className="elegant-label">{t('about.contact.call', 'Bizi Arayın')}</span>
+            <span className="elegant-value">{contactPhone}</span>
+          </div>
+        </a>
+
+        {/* E-Posta Kartı */}
+        <a href={`mailto:${contactEmail}`} className="elegant-card">
+          <div className="elegant-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+          <div className="elegant-info">
+            <span className="elegant-label">{t('about.contact.email', 'E-Posta Gönderin')}</span>
+            <span className="elegant-value">{contactEmail}</span>
+          </div>
+        </a>
+
+      </div>
     </section>
   );
 }
@@ -385,8 +435,11 @@ export default function About() {
       {/* --- THE CORE (YATAY KAYDIRMA) SECTION --- */}
       <TheCoreSection />
 
-      {/* --- YENİ: TERMİNAL / BOOT SEQUENCE BÖLÜMÜ --- */}
+      {/* --- TERMİNAL / BOOT SEQUENCE BÖLÜMÜ --- */}
       <TerminalTechSection />
+
+      {/* --- YENİ: TEMİZ VE ŞIK İLETİŞİM BÖLÜMÜ --- */}
+      <ElegantContactSection />
 
       {/* --- SAYFA İÇİ CSS --- */}
       <style>{`
@@ -568,10 +621,10 @@ export default function About() {
           font-weight: 300;
         }
 
-        /* --- YENİ: TERMİNAL / BOOT SEQUENCE CSS --- */
+        /* --- TERMİNAL / BOOT SEQUENCE CSS --- */
         
         .terminal-container {
-          padding: 120px 5vw;
+          padding: 80px 5vw 40px 5vw; 
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -602,19 +655,16 @@ export default function About() {
           letter-spacing: -1px;
         }
 
-        /* Terminal Penceresi Tasarımı */
         .terminal-window {
           width: 100%;
-          background: #060606; /* Derin terminal siyahı */
-          border: 1px solid rgba(116, 38, 176, 0.2); /* Etrafında hafif mor ışıma */
+          background: #060606; 
+          border: 1px solid rgba(116, 38, 176, 0.2); 
           border-radius: 12px;
           overflow: hidden;
           box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(116, 38, 176, 0.05);
-          /* Kod fontu zorunlu. Eğer Fira Code yoksa Courier New kullanır */
           font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
         }
 
-        /* Mac OS Tarzı Üst Çubuk */
         .terminal-top-bar {
           background: #121212;
           padding: 12px 20px;
@@ -648,10 +698,9 @@ export default function About() {
           font-weight: 500;
         }
 
-        /* Terminal İçeriği */
         .terminal-body {
           padding: 30px;
-          min-height: 350px; /* Boot olmadan önce ekran küçük kalmasın diye */
+          min-height: 350px; 
         }
 
         .terminal-line {
@@ -662,40 +711,37 @@ export default function About() {
         }
 
         .terminal-prompt {
-          color: #7426B0; /* Mor komut imleci */
+          color: #7426B0; 
           margin-right: 15px;
           font-weight: bold;
         }
 
         .terminal-text {
-          color: #A0A0A0; /* Gri standart terminal çıktısı */
+          color: #A0A0A0; 
         }
 
-        /* Sınıflandırılmış Çıktı Renklendirmeleri */
         .terminal-line.cmd .terminal-text {
-          color: #FFFFFF; /* Kullanıcı komutu beyaz olur */
+          color: #FFFFFF; 
         }
 
         .terminal-line.success .terminal-text {
-          color: #7426B0; /* En son onay mesajı güçlü mor */
+          color: #7426B0; 
           font-weight: bold;
-          margin-top: 20px; /* Son satırdan önce boşluk */
+          margin-top: 20px; 
         }
 
-        /* JSON içindeki span elementlerine uygulanan CSS sınıfları */
         .term-status {
-          color: #27C93F; /* Yeşil [OK] ibaresi */
+          color: #27C93F; 
           font-weight: bold;
           margin-right: 8px;
         }
 
         .term-hl {
-          color: #FFFFFF; /* Vurgulanan teknolojiler bembeyaz parlar */
+          color: #FFFFFF; 
           font-weight: bold;
           text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
-        /* Yanıp Sönen Blok İmleç */
         .terminal-cursor {
           display: inline-block;
           width: 10px;
@@ -704,10 +750,112 @@ export default function About() {
           animation: terminal-blink 1s step-end infinite;
         }
 
-        @keyframes terminal-blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
+        /* --- YENİ: TEMİZ VE ŞIK İLETİŞİM CSS --- */
+        
+        .elegant-contact-container {
+          padding: 60px 5vw 120px 5vw;
+          max-width: 900px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
+
+        .elegant-contact-header {
+          text-align: center;
+          margin-bottom: 50px;
+        }
+
+        .elegant-heading {
+          font-size: clamp(32px, 5vw, 48px);
+          font-weight: 800;
+          color: #080808;
+          margin-bottom: 15px;
+          letter-spacing: -1px;
+        }
+
+        .elegant-subtitle {
+          font-size: clamp(16px, 2vw, 20px);
+          color: #626262;
+          font-weight: 400;
+          max-width: 600px;
+          margin: 0 auto;
+          line-height: 1.6;
+        }
+
+        .elegant-cards-wrapper {
+          display: flex;
+          gap: 30px;
+          width: 100%;
+          justify-content: center;
+          flex-wrap: wrap; /* Mobilde alt alta inmesini sağlar */
+        }
+
+        /* Şık ve Ferah Kart Tasarımı */
+        .elegant-card {
+          flex: 1;
+          min-width: 300px; /* Çok daralmasını engeller */
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          padding: 30px;
+          background-color: #FFFFFF;
+          border: 1px solid rgba(0, 0, 0, 0.08);
+          border-radius: 20px;
+          text-decoration: none;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+          transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .elegant-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 60px;
+          height: 60px;
+          background-color: rgba(116, 38, 176, 0.05); /* Çok hafif mor arka plan */
+          color: #7426B0; /* Kurumsal Mor */
+          border-radius: 50%;
+          transition: all 0.3s ease;
+        }
+
+        .elegant-info {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .elegant-label {
+          font-size: 14px;
+          font-weight: 600;
+          color: #888888;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .elegant-value {
+          font-size: clamp(18px, 2vw, 22px);
+          font-weight: 700;
+          color: #080808;
+          transition: color 0.3s ease;
+        }
+
+        /* Hover (Üzerine Gelme) Durumu */
+        .elegant-card:hover {
+          transform: translateY(-5px);
+          border-color: rgba(116, 38, 176, 0.3);
+          box-shadow: 0 20px 40px rgba(116, 38, 176, 0.08);
+        }
+
+        .elegant-card:hover .elegant-icon {
+          background-color: #7426B0;
+          color: #FFFFFF;
+        }
+
+        .elegant-card:hover .elegant-value {
+          color: #7426B0;
+        }
+
 
         /* --- MOBİL UYUMLULUK DÜZELTMELERİ --- */
         @media (max-width: 768px) {
@@ -742,9 +890,8 @@ export default function About() {
             margin-bottom: 10px;
           }
 
-          /* Mobil Terminal Düzeltmeleri */
           .terminal-container {
-            padding: 80px 5vw;
+            padding: 80px 5vw 40px 5vw;
           }
 
           .terminal-body {
@@ -753,7 +900,27 @@ export default function About() {
           }
 
           .terminal-title {
-            display: none; /* Mobilde yer darlığından dolayı title gizlenir */
+            display: none; 
+          }
+
+          /* Mobil Elegant Contact Düzeltmeleri */
+          .elegant-contact-container {
+            padding: 40px 5vw 80px 5vw;
+          }
+
+          .elegant-cards-wrapper {
+            flex-direction: column;
+            gap: 20px;
+          }
+
+          .elegant-card {
+            width: 100%;
+            padding: 20px;
+          }
+          
+          .elegant-icon {
+            width: 50px;
+            height: 50px;
           }
         }
       `}</style>

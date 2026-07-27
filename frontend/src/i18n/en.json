@@ -47,6 +47,11 @@
     "tech": {
       "badge": "INFRASTRUCTURE & STACK",
       "heading": "System Initializing"
-    }
-  }
+    },
+    "contact": {
+      "heading": "Got a project in mind?",
+      "subtitle": "Grab a coffee and let's talk details. We are just a phone call away.",
+      "call": "CALL US",
+      "email": "EMAIL US"
+  }}
 }
