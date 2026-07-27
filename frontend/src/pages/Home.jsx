@@ -4,12 +4,8 @@ import InfinityKnot from '../components/InfinityKnot';
 
 // Admin paneli (DB) gelene kadar kullanacağımız Mock Data
 const partnerLogos = [
-  { id: 1, name: 'Ciğerci Özkan', url: 'https://cigerciozkan.com', logo: 'https://cigerciozkan.com/cigerciozkanassets/logo1.png' },
-  { id: 2, name: 'Marka 2', url: '#', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Porsche_hood_emblem.png' },
-  { id: 3, name: 'Marka 3', url: '#', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/98/Mercedes-Benz_Star_%281969-1986%2C_2025-%29.svg' },
-  { id: 4, name: 'Marka 4', url: '#', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg' },
-  { id: 5, name: 'Marka 5', url: '#', logo: 'https://www.dogsar.com.tr/assets/img/logo-dogsar-01.png' },
-];
+  { id: 1, name: 'Ciğerci Özkan', url: 'https://cigerciozkan.com', logo: 'https://resmim.net/cdn/2026/07/28/EkTtJ6.png' },
+  ];
 
 function Home() {
   const { t } = useTranslation();
