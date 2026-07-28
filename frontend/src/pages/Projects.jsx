@@ -10,8 +10,14 @@ function ProjectSplitScreen({ project, index }) {
 
   // Veritabanından string (JSON) olarak gelme ihtimaline karşı güvenli ayrıştırma (Tasarımı bozmamak için)
   const parseArray = (data) => {
+    if (!data) return [];
     if (Array.isArray(data)) return data;
-    try { return JSON.parse(data); } catch { return []; }
+    try { 
+      return JSON.parse(data); 
+    } catch { 
+      // Eğer JSON parse edilemezse ve düz yazıysa virgül veya boşluğa göre diziye çevir
+      return typeof data === 'string' ? [data] : []; 
+    }
   };
 
   const contentArray = parseArray(project.content);
