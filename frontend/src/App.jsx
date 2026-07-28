@@ -15,7 +15,7 @@ import Footer from './components/Footer';
 // YENİ: Özel İmleç (Cursor) Bileşeni
 import CustomCursor from './components/CustomCursor'; 
 
-// --- LENİS İLE UYUMLU "EN ÜSTE KAYDIR" BİLEŞENİ ---
+// --- LENİS İLE UYUMLU "EN ÜSTE KAYDIR" BİLEŞENİ. ---
 function ScrollToTop() {
   const { pathname } = useLocation();
   const lenis = useLenis(); // Lenis motorunu yakalıyoruz
