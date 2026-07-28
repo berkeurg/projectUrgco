@@ -661,7 +661,7 @@ export default function About() {
           border: 1px solid rgba(116, 38, 176, 0.2); 
           border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(116, 38, 176, 0.05);
+          box-shadow: 0 30px 60px rgba(60, 0, 53, 0.3), inset 0 0 20px rgba(116, 38, 176, 0.05);
           font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
         }
 
