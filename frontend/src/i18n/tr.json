@@ -52,7 +52,28 @@
       "heading": "Bir projeniz mi var?",
       "subtitle": "Kahvenizi alın ve detayları konuşalım. Size bir telefon kadar yakınız.",
       "call": "BİZİ ARAYIN",
-      "email": "E-POSTA GÖNDERİN"
-    }
-    }
+      "email": "E-POSTA GÖNDERİN"}
+    },
+  "projects": {
+    "badge": "PORTFOLYO // VİTRİN",
+    "title": "Projelerimiz",
+    "subtitle": "Sadece tasarlamıyoruz, mühendislik disipliniyle inşa ediyoruz. Veritabanı şemalarından, milisaniyelik ön yüz etkileşimlerine kadar her satır kodun bir amacı var.",
+    "status": {
+      "published": "YAYINDA"
+    },
+    "labels": {
+      "client": "MÜŞTERİ",
+      "year": "YIL",
+      "tech": "KULLANILAN TEKNOLOJİLER",
+      "details": "PROJE DETAYLARI",
+      "features": "TEMEL MİMARİ & ÖZELLİKLER"
+    },
+    "buttons": {
+      "live": "CANLI SİSTEMİ GÖR",
+      "github": "KAYNAK KOD (GITHUB)"
+    },
+    "loading": "Yükleniyor...",
+    "empty": "Henüz gösterilecek proje bulunmuyor."
   }
+}
+

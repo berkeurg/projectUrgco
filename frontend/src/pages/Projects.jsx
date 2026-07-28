@@ -1,28 +1,56 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-// YENİ: Lenis kancasını import ediyoruz
 import { useLenis } from 'lenis/react';
 
 // --- TEKİL PROJE (BÖLÜNMÜŞ EKRAN) BİLEŞENİ ---
 function ProjectSplitScreen({ project, index }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language || 'tr'; 
   const isEven = index % 2 === 0;
 
-  // Veritabanından string (JSON) olarak gelme ihtimaline karşı güvenli ayrıştırma (Tasarımı bozmamak için)
-  const parseArray = (data) => {
-    if (!data) return [];
-    if (Array.isArray(data)) return data;
-    try { 
-      return JSON.parse(data); 
-    } catch { 
-      // Eğer JSON parse edilemezse ve düz yazıysa virgül veya boşluğa göre diziye çevir
-      return typeof data === 'string' ? [data] : []; 
+  const getI18nText = (data) => {
+    if (!data) return '';
+    try {
+      const parsed = JSON.parse(data);
+      return parsed[currentLang] || parsed['tr'] || data; 
+    } catch {
+      return data;
     }
   };
 
-  const contentArray = parseArray(project.content);
-  const featuresArray = parseArray(project.features);
-  const techStackArray = parseArray(project.techStack);
+  const getI18nArray = (data) => {
+    if (!data) return [];
+    try {
+      const parsed = JSON.parse(data);
+      const langString = parsed[currentLang] || parsed['tr'] || data;
+      
+      if (typeof langString === 'string') {
+        try { return JSON.parse(langString); } catch { return [langString]; }
+      }
+      return Array.isArray(langString) ? langString : [langString];
+    } catch {
+      return [data];
+    }
+  };
+
+  const getUniversalArray = (data) => {
+    if (!data) return [];
+    try {
+      const parsed = JSON.parse(data);
+      return Array.isArray(parsed) ? parsed : [data];
+    } catch {
+      return typeof data === 'string' ? [data] : [];
+    }
+  };
+
+  const title = getI18nText(project.title);
+  const client = getI18nText(project.client);
+  const category = getI18nText(project.category);
+  const shortDesc = getI18nText(project.shortDesc);
+  
+  const contentArray = getI18nArray(project.content);
+  const featuresArray = getI18nArray(project.features);
+  const techStackArray = getUniversalArray(project.techStack);
 
   return (
     <div className={`project-section ${isEven ? 'layout-left' : 'layout-right'}`}>
@@ -30,10 +58,10 @@ function ProjectSplitScreen({ project, index }) {
       {/* SOL TARAF: Ekrana Yapışan (Sticky) Görsel Alanı */}
       <div className="sticky-visual-container">
         <div className="sticky-visual-inner">
-          <img src={project.coverImage} alt={project.title} className="project-cover" />
+          <img src={project.coverImage} alt={title} className="project-cover" />
           
           <div className="visual-overlay">
-            <span className="project-id">{project.id}</span>
+            <span className="project-id">{project.projectId || `PRJ-0${project.id}`}</span>
             <div className="status-indicator">
               <span className="status-dot"></span>
               <span>{t('projects.status.published', 'YAYINDA')}</span>
@@ -46,13 +74,13 @@ function ProjectSplitScreen({ project, index }) {
       <div className="scroll-content-container">
         
         <div className="content-header">
-          <span className="content-category">{project.category}</span>
-          <h2 className="content-title">{project.title}</h2>
+          <span className="content-category">{category}</span>
+          <h2 className="content-title">{title}</h2>
           
           <div className="project-meta-grid">
             <div className="meta-item">
               <span className="meta-label">{t('projects.labels.client', 'MÜŞTERİ')}</span>
-              <span className="meta-value">{project.client}</span>
+              <span className="meta-value">{client}</span>
             </div>
             <div className="meta-item">
               <span className="meta-label">{t('projects.labels.year', 'YIL')}</span>
@@ -72,7 +100,7 @@ function ProjectSplitScreen({ project, index }) {
 
         <div className="content-body">
           <span className="section-label">{t('projects.labels.details', 'PROJE DETAYLARI')}</span>
-          <p className="lead-text">{project.shortDesc}</p>
+          <p className="lead-text">{shortDesc}</p>
           
           {contentArray.map((paragraph, i) => (
             <p key={i} className="body-text">{paragraph}</p>
@@ -89,14 +117,18 @@ function ProjectSplitScreen({ project, index }) {
         </div>
 
         <div className="content-actions">
-          <a href={project.liveLink || '#'} target="_blank" rel="noreferrer" className="action-btn primary">
-            <span>{t('projects.buttons.live', 'CANLI SİSTEMİ GÖR')}</span>
-            <span className="arrow">↗</span>
-          </a>
-          <a href={project.githubLink || '#'} target="_blank" rel="noreferrer" className="action-btn secondary">
-            <span>{t('projects.buttons.github', 'KAYNAK KOD (GITHUB)')}</span>
-            <span className="arrow">↗</span>
-          </a>
+          {project.liveLink && project.liveLink !== '#' && (
+            <a href={project.liveLink} target="_blank" rel="noreferrer" className="action-btn primary">
+              <span>{t('projects.buttons.live', 'CANLI SİSTEMİ GÖR')}</span>
+              <span className="arrow">↗</span>
+            </a>
+          )}
+          {project.githubLink && project.githubLink !== '#' && (
+            <a href={project.githubLink} target="_blank" rel="noreferrer" className="action-btn secondary">
+              <span>{t('projects.buttons.github', 'KAYNAK KOD (GITHUB)')}</span>
+              <span className="arrow">↗</span>
+            </a>
+          )}
         </div>
 
       </div>
@@ -109,11 +141,8 @@ export default function Projects() {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const showcaseRef = useRef(null);
-  
-  // YENİ: Lenis motorunu bileşen içine alıyoruz
   const lenis = useLenis();
 
-  // --- API'DEN VERİ ÇEKME DURUMLARI ---
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -135,7 +164,6 @@ export default function Projects() {
     fetchProjects();
   }, [currentLang]);
 
-  // --- SAYFALAMA (PAGINATION) MANTIĞI ---
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 3;
 
@@ -147,8 +175,6 @@ export default function Projects() {
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
-    
-    // YENİ: Lenis üzerinden kaydırma
     if (lenis) {
       lenis.scrollTo(0, { duration: 1.2 });
     } else {
@@ -172,11 +198,11 @@ export default function Projects() {
       <div className="projects-showcase" ref={showcaseRef}>
         {isLoading ? (
           <div style={{ textAlign: 'center', padding: '100px', color: '#7426B0', fontFamily: "'Fira Code', monospace" }}>
-            Yükleniyor...
+            {t('projects.loading', 'Yükleniyor...')}
           </div>
         ) : projects.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '100px', color: '#666', fontFamily: "'Fira Code', monospace" }}>
-            Henüz gösterilecek proje bulunmuyor.
+            {t('projects.empty', 'Henüz gösterilecek proje bulunmuyor.')}
           </div>
         ) : (
           currentProjects.map((project, index) => (

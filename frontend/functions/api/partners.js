@@ -54,17 +54,22 @@ export async function onRequestPost(context) {
   }
 }
 
-// 3. VERİ GÜNCELLEME (PUT)
+
+// 3. VERİ GÜNCELLEME (PUT) - Tam Kapsamlı (Düzenleme ve Hızlı İşlemler İçin)
 export async function onRequestPut(context) {
   if (!checkAuth(context.request, context.env)) return Response.json({ error: "Yetkisiz işlem!" }, { status: 401 });
 
   try {
     const data = await context.request.json();
-    const { id, is_active, sort_order } = data;
+    const { id } = data;
     let updates = [], params = [];
     
-    if (is_active !== undefined) { updates.push("is_active = ?"); params.push(is_active ? 1 : 0); }
-    if (sort_order !== undefined) { updates.push("sort_order = ?"); params.push(parseInt(sort_order) || 1); }
+    // Gelen veriye göre güncellenecek alanları dinamik olarak belirle
+    if (data.company_name !== undefined) { updates.push("company_name = ?"); params.push(data.company_name); }
+    if (data.logo_url !== undefined) { updates.push("logo_url = ?"); params.push(data.logo_url); }
+    if (data.website_url !== undefined) { updates.push("website_url = ?"); params.push(data.website_url); }
+    if (data.sort_order !== undefined) { updates.push("sort_order = ?"); params.push(parseInt(data.sort_order) || 1); }
+    if (data.is_active !== undefined) { updates.push("is_active = ?"); params.push(data.is_active ? 1 : 0); }
 
     if (updates.length === 0) return Response.json({ error: "Güncellenecek veri yok" }, { status: 400 });
 

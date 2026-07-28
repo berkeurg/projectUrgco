@@ -75,17 +75,32 @@ export async function onRequestPost(context) {
   }
 }
 
-// 3. VERİ GÜNCELLEME (PUT) - Hızlı aktif/pasif ve sıra değişimi için
+// 3. VERİ GÜNCELLEME (PUT) - Tam Kapsamlı (Düzenleme ve Hızlı İşlemler İçin)
 export async function onRequestPut(context) {
   if (!checkAuth(context.request, context.env)) return Response.json({ error: "Yetkisiz işlem!" }, { status: 401 });
 
   try {
     const data = await context.request.json();
-    const { id, isActive, sortOrder } = data;
+    const { id } = data;
     let updates = [], params = [];
-    
-    if (isActive !== undefined) { updates.push("is_active = ?"); params.push(isActive ? 1 : 0); }
-    if (sortOrder !== undefined) { updates.push("sort_order = ?"); params.push(parseInt(sortOrder) || 1); }
+
+    // React'ten gelen camelCase anahtarları, veritabanındaki snake_case sütunlara eşliyoruz
+    const fieldMap = {
+      projectId: 'project_id', slug: 'slug', title: 'title', client: 'client', year: 'year',
+      category: 'category', techStack: 'tech_stack', shortDesc: 'short_desc', content: 'content',
+      coverImage: 'cover_image', features: 'features', liveLink: 'live_link', githubLink: 'github_link',
+      sortOrder: 'sort_order', isActive: 'is_active'
+    };
+
+    for (const [key, dbColumn] of Object.entries(fieldMap)) {
+      if (data[key] !== undefined) {
+        updates.push(`${dbColumn} = ?`);
+        let val = data[key];
+        if (key === 'sortOrder') val = parseInt(val) || 1;
+        if (key === 'isActive') val = val ? 1 : 0;
+        params.push(val);
+      }
+    }
 
     if (updates.length === 0) return Response.json({ error: "Güncellenecek veri yok" }, { status: 400 });
 

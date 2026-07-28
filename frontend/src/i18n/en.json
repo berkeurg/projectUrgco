@@ -53,5 +53,27 @@
       "subtitle": "Grab a coffee and let's talk details. We are just a phone call away.",
       "call": "CALL US",
       "email": "EMAIL US"
-  }}
+  }
+},
+  "projects": {
+    "badge": "PORTFOLIO // SHOWCASE",
+    "title": "Our Projects",
+    "subtitle": "We don't just design, we build with engineering discipline. From database schemas to millisecond frontend interactions, every line of code has a purpose.",
+    "status": {
+      "published": "LIVE"
+    },
+    "labels": {
+      "client": "CLIENT",
+      "year": "YEAR",
+      "tech": "TECH STACK",
+      "details": "PROJECT DETAILS",
+      "features": "CORE ARCHITECTURE & FEATURES"
+    },
+    "buttons": {
+      "live": "VIEW LIVE SYSTEM",
+      "github": "SOURCE CODE (GITHUB)"
+    },
+    "loading": "Loading...",
+    "empty": "No projects to show yet."
+  }
 }
