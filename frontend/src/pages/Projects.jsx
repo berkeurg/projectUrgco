@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 // YENİ: Lenis kancasını import ediyoruz
 import { useLenis } from 'lenis/react';
@@ -8,8 +8,15 @@ function ProjectSplitScreen({ project, index }) {
   const { t } = useTranslation();
   const isEven = index % 2 === 0;
 
-  const contentArray = Array.isArray(project.content) ? project.content : [project.content];
-  const featuresArray = Array.isArray(project.features) ? project.features : [project.features];
+  // Veritabanından string (JSON) olarak gelme ihtimaline karşı güvenli ayrıştırma (Tasarımı bozmamak için)
+  const parseArray = (data) => {
+    if (Array.isArray(data)) return data;
+    try { return JSON.parse(data); } catch { return []; }
+  };
+
+  const contentArray = parseArray(project.content);
+  const featuresArray = parseArray(project.features);
+  const techStackArray = parseArray(project.techStack);
 
   return (
     <div className={`project-section ${isEven ? 'layout-left' : 'layout-right'}`}>
@@ -51,7 +58,7 @@ function ProjectSplitScreen({ project, index }) {
         <div className="content-tech">
           <span className="section-label">{t('projects.labels.tech', 'KULLANILAN TEKNOLOJİLER')}</span>
           <div className="tech-tags">
-            {project.techStack.map((tech, i) => (
+            {techStackArray.map((tech, i) => (
               <span key={i} className="tech-tag">{tech}</span>
             ))}
           </div>
@@ -76,11 +83,11 @@ function ProjectSplitScreen({ project, index }) {
         </div>
 
         <div className="content-actions">
-          <a href={project.liveLink} className="action-btn primary">
+          <a href={project.liveLink || '#'} target="_blank" rel="noreferrer" className="action-btn primary">
             <span>{t('projects.buttons.live', 'CANLI SİSTEMİ GÖR')}</span>
             <span className="arrow">↗</span>
           </a>
-          <a href={project.githubLink} className="action-btn secondary">
+          <a href={project.githubLink || '#'} target="_blank" rel="noreferrer" className="action-btn secondary">
             <span>{t('projects.buttons.github', 'KAYNAK KOD (GITHUB)')}</span>
             <span className="arrow">↗</span>
           </a>
@@ -100,81 +107,27 @@ export default function Projects() {
   // YENİ: Lenis motorunu bileşen içine alıyoruz
   const lenis = useLenis();
 
-  // MOCK DATA
-  const MOCK_PROJECTS = useMemo(() => [
-    {
-      id: "PRJ-01",
-      slug: "cigerci-ozkan",
-      title: t('projects.mock.prj1.title', 'Ciğerci Özkan'),
-      client: t('projects.mock.prj1.client', 'Yerel İşletme'),
-      year: "2026",
-      category: t('projects.mock.prj1.category', 'Kurumsal Web Sistemi & QR Menü'),
-      techStack: ["HTML5", "CSS3", "JavaScript", "SEO", "Responsive Design"],
-      shortDesc: t('projects.mock.prj1.shortDesc', 'Geleneksel bir restoran için tasarlanmış modern, hızlı ve SEO uyumlu dijital menü altyapısı.'),
-      content: t('projects.mock.prj1.content', { returnObjects: true, defaultValue: [
-        "İşletmenin dijital varlığını sıfırdan inşa ettiğimiz bu projede, öncelikli hedef kullanıcıların menüye en hızlı şekilde ulaşabilmesiydi.",
-        "Fiziksel masalara entegre edilen QR kod sistemi ile müşteriler menüye saniyeler içinde erişebiliyor. Arama motoru optimizasyonu (SEO) sayesinde işletmenin yerel aramalardaki görünürlüğü maksimize edildi."
-      ]}),
-      coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop",
-      features: t('projects.mock.prj1.features', { returnObjects: true, defaultValue: ["Milimetrik Duyarlı Tasarım", "Hızlı Yüklenme Süreleri", "QR Entegrasyonu"]}),
-      liveLink: "#",
-      githubLink: "#"
-    },
-    {
-      id: "PRJ-02",
-      slug: "couplefun",
-      title: t('projects.mock.prj2.title', 'CoupleFun'),
-      client: t('projects.mock.prj2.client', 'Bireysel Girişim'),
-      year: "2026",
-      category: t('projects.mock.prj2.category', 'İlişki & Eğlence Platformu'),
-      techStack: ["PHP", "MySQL", "Ajax", "Rest API"],
-      shortDesc: t('projects.mock.prj2.shortDesc', "Çiftler için geliştirilmiş, gerçek zamanlı sohbet widget'ı ve detaylı bir yönetim paneli barındıran dinamik web uygulaması."),
-      content: t('projects.mock.prj2.content', { returnObjects: true, defaultValue: [
-        "CoupleFun, ilişkisel veritabanı (RDBMS) kurallarının en katı şekilde uygulandığı, yüksek performanslı bir backend projesidir.",
-        "Kullanıcıların anlık iletişim kurabilmesi için özel bir chat widget'ı geliştirildi. Tüm veri akışı, güvenlik açıklarına karşı optimize edilmiş PHP mimarisi ve PDO veritabanı bağlantıları ile sağlandı."
-      ]}),
-      coverImage: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1200&auto=format&fit=crop",
-      features: t('projects.mock.prj2.features', { returnObjects: true, defaultValue: ["Dinamik Dashboard", "Real-time Chat", "Güvenli Mimari"]}),
-      liveLink: "#",
-      githubLink: "#"
-    },
-    {
-      id: "PRJ-03",
-      slug: "urgco-core",
-      title: t('projects.mock.prj3.title', 'URGCO Core'),
-      client: t('projects.mock.prj3.client', 'İç Proje'),
-      year: "2026",
-      category: t('projects.mock.prj3.category', 'Geliştirici Portfolyosu'),
-      techStack: ["React", "Node.js", "Kinetik UI"],
-      shortDesc: t('projects.mock.prj3.shortDesc', 'Awwwards standartlarında etkileşimlere sahip yüksek performanslı kişisel sistem.'),
-      content: t('projects.mock.prj3.content', { returnObjects: true, defaultValue: [
-        "Gereksiz render süreçlerinden arındırılmış, tamamen donanım hızlandırması kullanan bir arayüz kurgusu.",
-        "İleride Cloudflare ve özel bir backend ile entegre edilecek tam dinamik altyapı."
-      ]}),
-      coverImage: "https://images.unsplash.com/photo-1550439062-609e1531270e?q=80&w=1200&auto=format&fit=crop",
-      features: t('projects.mock.prj3.features', { returnObjects: true, defaultValue: ["Bölünmüş Ekran (Sticky)", "Sayfalama (Pagination)", "Kusursuz UX"]}),
-      liveLink: "#",
-      githubLink: "#"
-    },
-    {
-      id: "PRJ-04",
-      slug: "test-proje",
-      title: t('projects.mock.prj4.title', 'Sistem Test Projesi'),
-      client: t('projects.mock.prj4.client', 'Ar-Ge'),
-      year: "2027",
-      category: t('projects.mock.prj4.category', 'Deneysel Yazılım'),
-      techStack: ["Flutter", "Dart", "Firebase"],
-      shortDesc: t('projects.mock.prj4.shortDesc', 'Sayfalamanın ikinci sayfada nasıl çalıştığını göstermek için eklenen test verisi.'),
-      content: t('projects.mock.prj4.content', { returnObjects: true, defaultValue: [
-        "Bu proje, pagination (sayfalama) yapısının üç projeden sonra başarıyla diğer sayfaya geçtiğini kanıtlamak için oluşturulmuştur.",
-        "Dinamik veri çekme işlemlerine geçildiğinde bu veri veritabanından silinecektir."
-      ]}),
-      coverImage: "https://images.unsplash.com/photo-1618477388954-7852f32655ec?q=80&w=1200&auto=format&fit=crop",
-      features: t('projects.mock.prj4.features', { returnObjects: true, defaultValue: ["Mobil Uyum", "Durum Yönetimi", "API Tüketimi"]}),
-      liveLink: "#",
-      githubLink: "#"
-    }
-  ], [t]);
+  // --- API'DEN VERİ ÇEKME DURUMLARI ---
+  const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await fetch('/api/projects');
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setProjects(data);
+        }
+      } catch (error) {
+        console.error("Projeler yüklenirken hata oluştu:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, [currentLang]);
 
   // --- SAYFALAMA (PAGINATION) MANTIĞI ---
   const [currentPage, setCurrentPage] = useState(1);
@@ -182,22 +135,16 @@ export default function Projects() {
 
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
-  const currentProjects = MOCK_PROJECTS.slice(indexOfFirstProject, indexOfLastProject);
+  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
 
-  const totalPages = Math.ceil(MOCK_PROJECTS.length / projectsPerPage);
+  const totalPages = Math.ceil(projects.length / projectsPerPage);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
     
     // YENİ: Lenis üzerinden kaydırma
     if (lenis) {
-      // 0 değeri sayfanın mutlak en üstüne (Hero kısmına) yumuşakça kaydırır
       lenis.scrollTo(0, { duration: 1.2 });
-      
-      /* Alternatif: Eğer sayfa değişince Hero kısmını atlayıp direkt projelerin
-         başladığı yere gitmek istersen üstteki satırı silip şunu kullanabilirsin:
-         lenis.scrollTo(showcaseRef.current, { offset: -80, duration: 1.2 });
-      */
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -217,9 +164,19 @@ export default function Projects() {
 
       {/* Dinamik Yapışkan Bölünmüş Ekran Alanı */}
       <div className="projects-showcase" ref={showcaseRef}>
-        {currentProjects.map((project, index) => (
-          <ProjectSplitScreen key={project.id} project={project} index={index} />
-        ))}
+        {isLoading ? (
+          <div style={{ textAlign: 'center', padding: '100px', color: '#7426B0', fontFamily: "'Fira Code', monospace" }}>
+            Yükleniyor...
+          </div>
+        ) : projects.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '100px', color: '#666', fontFamily: "'Fira Code', monospace" }}>
+            Henüz gösterilecek proje bulunmuyor.
+          </div>
+        ) : (
+          currentProjects.map((project, index) => (
+            <ProjectSplitScreen key={project.id} project={project} index={index} />
+          ))
+        )}
       </div>
 
       {/* --- SAYFALAMA (PAGINATION) ARAYÜZÜ --- */}
