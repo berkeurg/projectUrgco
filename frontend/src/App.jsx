@@ -1,5 +1,7 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ReactLenis } from 'lenis/react';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+// YENİ: useLenis hook'unu import ettik
+import { ReactLenis, useLenis } from 'lenis/react';
 
 // Sayfalarımız
 import Home from './pages/Home';
@@ -9,21 +11,44 @@ import Projects from './pages/Projects';
 // Sabit Bileşenlerimiz
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+// YENİ: Özel İmleç (Cursor) Bileşeni
+import CustomCursor from './components/CustomCursor'; 
+
+// --- LENİS İLE UYUMLU "EN ÜSTE KAYDIR" BİLEŞENİ ---
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  const lenis = useLenis(); // Lenis motorunu yakalıyoruz
+
+  useEffect(() => {
+    if (lenis) {
+      // Sayfa (URL) değiştiğinde Lenis motoruna 0 (en üst) noktasına gitmesini söylüyoruz.
+      // immediate: true sayesinde aşağıdan yukarı kayarak değil, anında tepeye ışınlanır.
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      // Lenis henüz yüklenmediyse güvenlik önlemi
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, lenis]);
+
+  return null;
+}
 
 function App() {
   return (
     <BrowserRouter>
-      {/* 
-        YENİ: Lenis Kapsayıcısı 
-        root parametresi, kaydırmanın tüm HTML sayfasını (window) yakalamasını sağlar.
-        lerp: 0.1 değeri, ajans sitelerinde kullanılan en ideal yumuşaklık ayarıdır.
-      */}
       <ReactLenis root options={{ lerp: 0.05 }}>
         
-        {/* 1. KISIM: Yönlendirme (Routes) dışında kalan alan. Sitede HER ZAMAN görünür. */}
+        {/* 
+          DİKKAT: ScrollToTop bileşenini ReactLenis'in İÇİNE taşıdık. 
+          Çünkü useLenis hook'unun çalışabilmesi için Lenis kapsayıcısının içinde olması şarttır.
+        */}
+        <ScrollToTop />
+
+        {/* YENİ: Custom Cursor tüm siteyi kapsayacak şekilde eklendi */}
+        <CustomCursor />
+        
         <Navbar /> 
         
-        {/* 2. KISIM: Değişken alan (Trafik polisi). Sadece tıklanan linke göre içindeki sayfayı değiştirir. */}
         <main style={{ minHeight: '80vh', padding: '20px' }}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -32,7 +57,6 @@ function App() {
           </Routes>
         </main>
         
-        {/* 3. KISIM: Yine her zaman sabit kalan alt kısım. */}
         <Footer />
         
       </ReactLenis>

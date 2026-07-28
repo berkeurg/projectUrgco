@@ -1,12 +1,13 @@
 import { useState, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+// YENİ: Lenis kancasını import ediyoruz
+import { useLenis } from 'lenis/react';
 
 // --- TEKİL PROJE (BÖLÜNMÜŞ EKRAN) BİLEŞENİ ---
 function ProjectSplitScreen({ project, index }) {
   const { t } = useTranslation();
   const isEven = index % 2 === 0;
 
-  // i18n'den dizi (array) gelmeme ihtimaline karşı güvenli render kontrolü
   const contentArray = Array.isArray(project.content) ? project.content : [project.content];
   const featuresArray = Array.isArray(project.features) ? project.features : [project.features];
 
@@ -31,7 +32,6 @@ function ProjectSplitScreen({ project, index }) {
       {/* SAĞ TARAF: Kayan (Scroll) Dinamik Veri Alanı */}
       <div className="scroll-content-container">
         
-        {/* Proje Başlığı ve Metadatalar */}
         <div className="content-header">
           <span className="content-category">{project.category}</span>
           <h2 className="content-title">{project.title}</h2>
@@ -48,7 +48,6 @@ function ProjectSplitScreen({ project, index }) {
           </div>
         </div>
 
-        {/* Teknoloji Etiketleri */}
         <div className="content-tech">
           <span className="section-label">{t('projects.labels.tech', 'KULLANILAN TEKNOLOJİLER')}</span>
           <div className="tech-tags">
@@ -58,7 +57,6 @@ function ProjectSplitScreen({ project, index }) {
           </div>
         </div>
 
-        {/* Dinamik Paragraflar (Veritabanından/i18n'den Gelen Uzun İçerik) */}
         <div className="content-body">
           <span className="section-label">{t('projects.labels.details', 'PROJE DETAYLARI')}</span>
           <p className="lead-text">{project.shortDesc}</p>
@@ -68,7 +66,6 @@ function ProjectSplitScreen({ project, index }) {
           ))}
         </div>
 
-        {/* Özellikler Listesi */}
         <div className="content-features">
           <span className="section-label">{t('projects.labels.features', 'TEMEL MİMARİ & ÖZELLİKLER')}</span>
           <ul className="features-list">
@@ -78,7 +75,6 @@ function ProjectSplitScreen({ project, index }) {
           </ul>
         </div>
 
-        {/* Aksiyon Butonları (Linkler) */}
         <div className="content-actions">
           <a href={project.liveLink} className="action-btn primary">
             <span>{t('projects.buttons.live', 'CANLI SİSTEMİ GÖR')}</span>
@@ -100,9 +96,11 @@ export default function Projects() {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const showcaseRef = useRef(null);
+  
+  // YENİ: Lenis motorunu bileşen içine alıyoruz
+  const lenis = useLenis();
 
-  // MOCK DATA (i18n ile Sarmalanmış Hali)
-  // useMemo sayesinde sadece dil değiştiğinde veriler yeniden hesaplanır.
+  // MOCK DATA
   const MOCK_PROJECTS = useMemo(() => [
     {
       id: "PRJ-01",
@@ -190,8 +188,18 @@ export default function Projects() {
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
-    if (showcaseRef.current) {
-      showcaseRef.current.scrollIntoView({ behavior: 'smooth' });
+    
+    // YENİ: Lenis üzerinden kaydırma
+    if (lenis) {
+      // 0 değeri sayfanın mutlak en üstüne (Hero kısmına) yumuşakça kaydırır
+      lenis.scrollTo(0, { duration: 1.2 });
+      
+      /* Alternatif: Eğer sayfa değişince Hero kısmını atlayıp direkt projelerin
+         başladığı yere gitmek istersen üstteki satırı silip şunu kullanabilirsin:
+         lenis.scrollTo(showcaseRef.current, { offset: -80, duration: 1.2 });
+      */
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -308,7 +316,6 @@ export default function Projects() {
           border-top: 1px solid rgba(0,0,0,0.1);
         }
 
-        /* DİKKAT: En üstteki çizginin kaldırılması */
         .projects-showcase .project-section:first-child {
           border-top: none;
         }
@@ -327,11 +334,10 @@ export default function Projects() {
           position: relative;
         }
 
-        /* DİKKAT: Görselin kusursuz ortalanması (Navbar boşluğunu hesaba katar) */
         .sticky-visual-inner {
           position: sticky;
-          top: 80px; /* Sitenin Header/Navbar'ı için ayrılan boşluk */
-          height: calc(100vh - 80px); /* Kalan ekran boyutunu tam kullanır */
+          top: 80px;
+          height: calc(100vh - 80px);
           padding: 40px; 
           display: flex;
           align-items: center;
