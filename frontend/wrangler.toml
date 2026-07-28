@@ -1,0 +1,8 @@
+name = "urgco-portfolio"
+compatibility_date = "2024-03-20"
+
+# D1 Veritabanı Bağlantısı
+[[d1_databases]]
+binding = "urgco_db"
+database_name = "urgco_db"
+database_id = "0370354b-a911-4615-861d-3eade8257c43"

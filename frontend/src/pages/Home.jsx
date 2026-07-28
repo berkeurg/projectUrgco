@@ -1,14 +1,25 @@
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInView } from 'react-intersection-observer';
 import InfinityKnot from '../components/InfinityKnot';
 
-// Admin paneli (DB) gelene kadar kullanacağımız Mock Data
-const partnerLogos = [
-  { id: 1, name: 'Ciğerci Özkan', url: 'https://cigerciozkan.com', logo: 'https://resmim.net/cdn/2026/07/28/EkTtJ6.png' },
-  ];
-
 function Home() {
   const { t } = useTranslation();
+
+  // --- API'DEN GELEN VERİLER İÇİN STATE ---
+  const [partnerLogos, setPartnerLogos] = useState([]);
+
+  // --- SAYFA YÜKLENDİĞİNDE VERİLERİ ÇEK ---
+  useEffect(() => {
+    fetch('/api/partners')
+      .then((res) => res.json())
+      .then((data) => {
+        setPartnerLogos(data);
+      })
+      .catch((err) => {
+        console.error("Logolar çekilirken hata oluştu:", err);
+      });
+  }, []);
 
   // --- GÖRÜNÜRLÜK GÖZLEMCİLERİ (SCROLL ANİMASYONLARI) ---
   const { ref: heroRef, inView: heroInView } = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -34,7 +45,7 @@ function Home() {
         </div>
       </section>
 
-      {/* --- YENİ: SABİT MARKA IZGARASI (GRID) --- */}
+      {/* --- DİNAMİK MARKA IZGARASI (GRID) --- */}
       <section className="brands-section">
         <div 
           ref={brandsRef}
@@ -47,12 +58,13 @@ function Home() {
             {partnerLogos.map((brand) => (
               <a 
                 key={brand.id} 
-                href={brand.url} 
-                target="_blank" 
+                href={brand.website_url || "#"} // Eğer link yoksa boş kalsın
+                target={brand.website_url ? "_blank" : "_self"} // Sadece link varsa yeni sekmede açsın
                 rel="noopener noreferrer" 
                 className="brand-item"
+                style={{ pointerEvents: brand.website_url ? 'auto' : 'none' }} // Link yoksa tıklanmayı kapat
               >
-                <img src={brand.logo} alt={brand.name} />
+                <img src={brand.logo_url} alt={brand.company_name} title={brand.company_name} />
               </a>
             ))}
           </div>
@@ -67,7 +79,7 @@ function Home() {
           className={`services-container scroll-fade ${servicesInView ? 'animate-up' : ''}`}
         >
           
-          {/* SOL PANEL: Ekrana yapışıp (sticky) sabit kalacak olan kısım */}
+          {/* SOL PANEL */}
           <div className="services-left-panel">
             <h2 className="services-title">{t('home.servicesTitle')}</h2>
             <p className="services-subtitle">
@@ -78,9 +90,8 @@ function Home() {
             </div>
           </div>
 
-          {/* SAĞ PANEL: Aşağıdan kayarak gelip üst üste binecek kartlar */}
+          {/* SAĞ PANEL */}
           <div className="services-right-panel">
-            
             {/* Kart 1 */}
             <div className="service-card sticky-card" style={{ zIndex: 1 }}>
               <div className="service-icon-wrapper">
@@ -113,13 +124,12 @@ function Home() {
                 {t('home.service3Desc')}
               </p>
             </div>
-
           </div>
 
         </div>
       </section>
 
-      {/* --- İLETİŞİM (CTA) BÖLÜMÜ (TAM EKRAN SİYAH) --- */}
+      {/* --- İLETİŞİM (CTA) BÖLÜMÜ --- */}
       <section className="contact-section-dark">
         <div 
           ref={contactRef}
@@ -131,12 +141,10 @@ function Home() {
           </p>
           
           <div className="contact-actions">
-            {/* 1. Buton: Mail uygulamasına atar */}
             <a href="mailto:iletisim@urgco.tr" className="contact-btn primary-btn">
               {t('home.contactPrimaryBtn')}
             </a>
             
-            {/* 2. Buton: Arama uygulamasına atar (Numarayı kendine göre değiştir) */}
             <a href="https://wa.me/905332022073?text=Merhaba,%20web%20sitesi%20için%20bilgi%20almak%20istiyorum." className="contact-btn secondary-btn" target="_blank" rel="noopener noreferrer">
               {t('home.contactSecondaryBtn')}
             </a>
@@ -161,7 +169,7 @@ function Home() {
 
         /* --- HERO CSS --- */
         .hero-section {
-          flex: 1; /* Ekranın üst kısmında boşluk dengelemesini sağlar */
+          flex: 1;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -198,8 +206,8 @@ function Home() {
         /* --- MARKA IZGARASI CSS --- */
           .brands-section {
           width: 100%;
-          max-width: 1000px; /* BEYAZ ALANIN YANLARDAN KIRPILDIĞI YER BURASI */
-          margin: 0 auto; /* Beyaz alanı ekranın tam ortasına hizalar */
+          max-width: 1000px; 
+          margin: 0 auto; 
           padding: 40px 20px; 
           background-color: #FFFFFF;  
           border-radius: 15px;
@@ -248,11 +256,10 @@ function Home() {
           object-fit: contain;
         }
 
-        /* --- HİZMETLER BÖLÜMÜ CSS (Sticky Scroll & 2 Kolon) --- */
+        /* --- HİZMETLER BÖLÜMÜ CSS --- */
         .services-section {
           width: 100%;
           padding: 100px 20px;
-          /* Siyah arka plandan ayrışması için hafif gri/beyaz veya kendi konseptine uygun bir renk */
         }
 
         .services-container {
@@ -261,20 +268,17 @@ function Home() {
           display: flex;
           gap: 60px;
           position: relative;
-          /* Sağ panel bitene kadar hizalamayı yukarıdan başlatır */
           align-items: flex-start; 
         }
 
-        /* --- SOL PANEL (SABİT) --- */
         .services-left-panel {
           flex: 1;
-          /* Aşağı inerken ekranda nerede sabitleneceği */
           position: sticky;
           top: 120px; 
           display: flex;
           flex-direction: column;
           gap: 20px;
-          height: calc(100vh - 150px); /* 3D objeye ekran yüksekliğinde alan açar */
+          height: calc(100vh - 150px);
         }
 
         .services-title {
@@ -293,25 +297,21 @@ function Home() {
         }
 
         .services-3d-wrapper {
-          flex: 1; /* Kalan tüm dikey boşluğu 3D objeye verir */
+          flex: 1;
           width: 100%;
           overflow: hidden;
         }
 
-        /* --- SAĞ PANEL (KAYAN KARTLAR) --- */
         .services-right-panel {
           flex: 1;
           display: flex;
           flex-direction: column;
-          /* Kartların arasındaki scroll mesafesi (üst üste binmeleri için geniş tutuyoruz) */
           gap: 45vh; 
-          padding-bottom: 20vh; /* En alt kartın da rahatça durması için */
+          padding-bottom: 20vh; 
         }
 
-        /* Kartların birbiri üstüne yapışması */
         .sticky-card {
           position: sticky;
-          /* Kartlar ekranın ortasına/üstüne gelince durup bekleyecek */
           top: 150px; 
         }
 
@@ -324,7 +324,6 @@ function Home() {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          /* Yumuşak bir estetik geçiş */
           transition: transform 0.5s ease;
         }
 
@@ -351,7 +350,7 @@ function Home() {
           line-height: 1.7;
         }
 
-        /* --- MOBİL İÇİN KUSURSUZ DÜZEN --- */
+        /* --- MOBİL İÇİN DÜZEN --- */
         @media (max-width: 992px) {
           .services-container {
             display: flex;
@@ -359,17 +358,15 @@ function Home() {
             gap: 20px;
           }
           
-          /* SOL PANEL: Mobilde yapışkan (sticky) özelliği iptal, normal akışta duracak */
           .services-left-panel {
             position: relative;
             top: 0; 
             height: auto; 
             z-index: 1; 
-            text-align: center; /* Mobilde yazıları ortalamak daha şık durur */
+            text-align: center; 
           }
           
           .services-3d-wrapper {
-            /* vh yerine sabit px verdik ki kaydırırken adres çubuğu yüzünden boyut atlamasın */
             height: 350px; 
             background-color: transparent;
             margin-bottom: 30px;
@@ -380,22 +377,20 @@ function Home() {
           }
           
           .services-subtitle {
-            margin: 0 auto; /* Ortalamayı dengelemek için */
+            margin: 0 auto;
           }
 
-          /* SAĞ PANEL: Kartların kaydığı bölüm */
           .services-right-panel {
             position: relative;
             z-index: 2; 
             margin-top: 0;
-            gap: 60px; /* Mobilde kartların arasındaki scroll mesafesini açtık */
+            gap: 60px; 
             padding-bottom: 40px; 
           }
 
-          /* KARTLAR: 3D objenin üstüne değil, doğrudan ekranın en üstüne yapışsın */
           .sticky-card {
             position: sticky;
-            top: 90px; /* Navbar'ın hemen altında üst üste birikecekler */
+            top: 90px;
           }
           
           .service-card {
@@ -403,7 +398,7 @@ function Home() {
           }
         }
 
-        /* --- İLETİŞİM (CTA) BÖLÜMÜ CSS (Koyu Arka Plan) --- */
+        /* --- İLETİŞİM BÖLÜMÜ CSS --- */
         .contact-section-dark {
           width: 100%;
           background-color: #7426B0;
@@ -431,7 +426,7 @@ function Home() {
 
         .contact-subtitle {
           font-size: clamp(16px, 2vw, 18px);
-          color: #cecece; /* Siyah üzerinde göz yormayan gri */
+          color: #cecece; 
           max-width: 600px;
           line-height: 1.6;
           margin-bottom: 50px;
@@ -441,7 +436,7 @@ function Home() {
           display: flex;
           gap: 20px;
           justify-content: center;
-          flex-wrap: wrap; /* Mobilde sığmazlarsa otomatik alt alta atar */
+          flex-wrap: wrap; 
         }
 
         .contact-btn {
@@ -456,7 +451,6 @@ function Home() {
           transition: all 0.3s ease;
         }
 
-        /* Dolgulu Beyaz Buton */
         .primary-btn {
           background-color: #FFFFFF;
           color: #0B0B0B;
@@ -468,7 +462,6 @@ function Home() {
           box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
         }
 
-        /* Çizgili (Outlined) Transparan Buton */
         .secondary-btn {
           background-color: transparent;
           color: #FFFFFF;
