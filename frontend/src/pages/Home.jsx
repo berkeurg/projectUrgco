@@ -14,10 +14,17 @@ function Home() {
     fetch('/api/partners')
       .then((res) => res.json())
       .then((data) => {
-        setPartnerLogos(data);
+        // Gelen verinin gerçekten bir dizi (Array) olup olmadığını kontrol et
+        if (Array.isArray(data)) {
+          setPartnerLogos(data);
+        } else {
+          console.error("API'den dizi dışında bir veri geldi:", data);
+          setPartnerLogos([]); // Sayfa çökmesin diye boş dizi ata
+        }
       })
       .catch((err) => {
         console.error("Logolar çekilirken hata oluştu:", err);
+        setPartnerLogos([]);
       });
   }, []);
 
