@@ -329,19 +329,12 @@ function Home() {
         }
 
         .service-icon-wrapper {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 48px;
-          height: 48px;
-          background-color: #0B0B0B;
-          border-radius: 12px;
           margin-bottom: 30px;
         }
 
         .service-icon {
-          color: #FFFFFF;
-          font-size: 20px;
+          color: #7426B0;
+          font-size: 40px;
         }
 
         .service-card-title {
