@@ -7,7 +7,7 @@ import { ReactLenis, useLenis } from 'lenis/react';
 import Home from './pages/Home';
 import About from './pages/About';
 import Projects from './pages/Projects';
-import Admin from './pages/Admin';
+import Admin from "./pages/Admin.jsx";
 
 // Sabit Bileşenlerimiz
 import Navbar from './components/Navbar';
