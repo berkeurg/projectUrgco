@@ -114,3 +114,5 @@ export async function onRequestDelete(context) {
     return Response.json({ error: "Sunucu hatası.", detay: error.message }, { status: 500 });
   }
 }
+
+export default Admin;
