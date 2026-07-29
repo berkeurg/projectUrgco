@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
+// 1. DEĞİŞİKLİK: Suspense ve lazy eklendi
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInView } from 'react-intersection-observer';
-import InfinityKnot from '../components/InfinityKnot';
+
+// 2. DEĞİŞİKLİK: 3D obje artık normal değil, TEMBEL (Lazy) yükleniyor
+const InfinityKnot = lazy(() => import('../components/InfinityKnot'));
 
 function Home() {
   const { t } = useTranslation();
@@ -14,12 +17,11 @@ function Home() {
     fetch('/api/partners')
       .then((res) => res.json())
       .then((data) => {
-        // Gelen verinin gerçekten bir dizi (Array) olup olmadığını kontrol et
         if (Array.isArray(data)) {
           setPartnerLogos(data);
         } else {
           console.error("API'den dizi dışında bir veri geldi:", data);
-          setPartnerLogos([]); // Sayfa çökmesin diye boş dizi ata
+          setPartnerLogos([]); 
         }
       })
       .catch((err) => {
@@ -58,24 +60,21 @@ function Home() {
           ref={brandsRef}
           className={`brands-container scroll-fade ${brandsInView ? 'animate-up' : ''}`}
         >
-          
           <p className="brands-label">{t('home.brandsLabel')}</p>
-          
           <div className="brands-grid">
             {partnerLogos.map((brand) => (
               <a 
                 key={brand.id} 
-                href={brand.website_url || "#"} // Eğer link yoksa boş kalsın
-                target={brand.website_url ? "_blank" : "_self"} // Sadece link varsa yeni sekmede açsın
+                href={brand.website_url || "#"} 
+                target={brand.website_url ? "_blank" : "_self"} 
                 rel="noopener noreferrer" 
                 className="brand-item"
-                style={{ pointerEvents: brand.website_url ? 'auto' : 'none' }} // Link yoksa tıklanmayı kapat
+                style={{ pointerEvents: brand.website_url ? 'auto' : 'none' }} 
               >
                 <img src={brand.logo_url} alt={brand.company_name} title={brand.company_name} />
               </a>
             ))}
           </div>
-
         </div>
       </section>
 
@@ -85,7 +84,6 @@ function Home() {
           ref={servicesRef}
           className={`services-container scroll-fade ${servicesInView ? 'animate-up' : ''}`}
         >
-          
           {/* SOL PANEL */}
           <div className="services-left-panel">
             <h2 className="services-title">{t('home.servicesTitle')}</h2>
@@ -93,7 +91,16 @@ function Home() {
               {t('home.servicesSubtitle')}
             </p>
             <div className="services-3d-wrapper">
-              <InfinityKnot />
+              {/* 3. DEĞİŞİKLİK: 3D Obje Suspense ile sarıldı. Sayfa kilitlenmeyecek! */}
+              <Suspense 
+                fallback={
+                  <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666666' }}>
+                    3D Görsel Yükleniyor...
+                  </div>
+                }
+              >
+                <InfinityKnot />
+              </Suspense>
             </div>
           </div>
 
@@ -159,7 +166,7 @@ function Home() {
         </div>
       </section>
 
-      {/* SAYFA İÇİ STİLLER */}
+      {/* SAYFA İÇİ STİLLER (CSS'in hiçbir yerine dokunmadık, hepsi duruyor) */}
       <style>{`
         /* --- SCROLL ANİMASYON SINIFLARI --- */
         .scroll-fade {
