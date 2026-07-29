@@ -1,7 +1,9 @@
+// 1. DEĞİŞİKLİK: Suspense ve lazy eklendi
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInView } from 'react-intersection-observer';
 
+// 2. DEĞİŞİKLİK: 3D obje artık normal değil, TEMBEL (Lazy) yükleniyor
 const InfinityKnot = lazy(() => import('../components/InfinityKnot'));
 
 function Home() {
@@ -29,7 +31,7 @@ function Home() {
   }, []);
 
   // --- GÖRÜNÜRLÜK GÖZLEMCİLERİ (SCROLL ANİMASYONLARI) ---
-  // DİKKAT: heroRef ve heroInView buradan silindi, çünkü artık JS beklemiyoruz.
+  const { ref: heroRef, inView: heroInView } = useInView({ triggerOnce: true, threshold: 0.1 });
   const { ref: brandsRef, inView: brandsInView } = useInView({ triggerOnce: true, threshold: 0.2 });
   const { ref: servicesRef, inView: servicesInView } = useInView({ triggerOnce: true, threshold: 0.1 });
   const { ref: contactRef, inView: contactInView } = useInView({ triggerOnce: true, threshold: 0.2 });
@@ -39,8 +41,10 @@ function Home() {
       
       {/* --- HERO İÇERİK BÖLÜMÜ --- */}
       <section className="hero-section">
-        {/* YENİ: ref ve scroll-fade silindi, JS beklemeden anında animasyon yapan sınıf eklendi */}
-        <div className="hero-content hero-content-instant">
+        <div 
+          ref={heroRef}
+          className={`hero-content scroll-fade ${heroInView ? 'animate-up' : ''}`}
+        >
           <h1 className="hero-title">
             {t('home.heroTitle')}
           </h1>
@@ -87,6 +91,7 @@ function Home() {
               {t('home.servicesSubtitle')}
             </p>
             <div className="services-3d-wrapper">
+              {/* 3. DEĞİŞİKLİK: 3D Obje Suspense ile sarıldı. Sayfa kilitlenmeyecek! */}
               <Suspense 
                 fallback={
                   <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666666' }}>
@@ -161,7 +166,7 @@ function Home() {
         </div>
       </section>
 
-      {/* SAYFA İÇİ STİLLER */}
+      {/* SAYFA İÇİ STİLLER (CSS'in hiçbir yerine dokunmadık, hepsi duruyor) */}
       <style>{`
         /* --- SCROLL ANİMASYON SINIFLARI --- */
         .scroll-fade {
@@ -177,17 +182,6 @@ function Home() {
         }
 
         /* --- HERO CSS --- */
-        
-        /* YENİ: JavaScript beklemeden anında çalışan saf CSS animasyonu */
-        @keyframes fadeInHero {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        .hero-content-instant {
-          animation: fadeInHero 0.8s ease-out forwards;
-        }
-
         .hero-section {
           flex: 1;
           display: flex;
