@@ -9,11 +9,13 @@ import Home from './pages/Home';
 const About = lazy(() => import('./pages/About'));
 const Projects = lazy(() => import('./pages/Projects'));
 const Admin = lazy(() => import("./pages/Admin.jsx"));
+const Kvkk = lazy(() => import('./pages/Kvkk')); // Performans için tembel yüklüyoruz
 
 // Sabit Bileşenlerimiz
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import CustomCursor from './components/CustomCursor'; 
+import CookieBanner from './components/CookieBanner';
+import CustomCursor from './components/CustomCursor';
 
 // --- LENİS İLE UYUMLU "EN ÜSTE KAYDIR" BİLEŞENİ. ---
 function ScrollToTop() {
@@ -55,12 +57,13 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/kvkk" element={<Kvkk />} />
             </Routes>
           </Suspense>
         </main>
         
         <Footer />
-        
+        <CookieBanner />
       </ReactLenis>
     </BrowserRouter>
   );
