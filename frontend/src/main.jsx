@@ -24,6 +24,18 @@ Sentry.init({
   enableLogs: true
 });
 
+// --- VITE GÜNCELLEME (CHUNK) HATALARINI YAKALAYICI ---
+window.addEventListener('error', (e) => {
+  // Eğer hata bir modül yükleme hatasıysa (eski önbellek vs.)
+  if (e.message && (
+      e.message.includes('Failed to fetch dynamically imported module') || 
+      e.message.includes('Importing a module script failed')
+  )) {
+    // Kullanıcıya hiçbir şey hissettirmeden sayfayı anında en güncel haliyle yenile
+    window.location.reload();
+  }
+});
+
 // --- REACT ROOT RENDER ---
 createRoot(document.getElementById('root')).render(
   <StrictMode>
