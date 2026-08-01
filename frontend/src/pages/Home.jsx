@@ -1,9 +1,9 @@
-// 1. DEĞİŞİKLİK: Suspense ve lazy eklendi
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInView } from 'react-intersection-observer';
+import { isWebGLAvailable } from '../utils/checkWebGL';
 
-// 2. DEĞİŞİKLİK: 3D obje artık normal değil, TEMBEL (Lazy) yükleniyor
+// TEMBEL (Lazy) yüklenen 3D obje
 const InfinityKnot = lazy(() => import('../components/InfinityKnot'));
 
 function Home() {
@@ -12,8 +12,15 @@ function Home() {
   // --- API'DEN GELEN VERİLER İÇİN STATE ---
   const [partnerLogos, setPartnerLogos] = useState([]);
 
-  // --- SAYFA YÜKLENDİĞİNDE VERİLERİ ÇEK ---
+  // --- WEBGL DESTEĞİ KONTROLÜ İÇİN STATE ---
+  const [hasWebGL, setHasWebGL] = useState(true);
+
+  // --- SAYFA YÜKLENDİĞİNDE VERİLERİ ÇEK VE CİHAZ KONTROLÜ YAP ---
   useEffect(() => {
+    // Sayfa açıldığında cihazın 3D destekleyip desteklemediğine bak
+    setHasWebGL(isWebGLAvailable());
+
+    // Partner logolarını çek
     fetch('/api/partners')
       .then((res) => res.json())
       .then((data) => {
@@ -91,16 +98,22 @@ function Home() {
               {t('home.servicesSubtitle')}
             </p>
             <div className="services-3d-wrapper">
-              {/* 3. DEĞİŞİKLİK: 3D Obje Suspense ile sarıldı. Sayfa kilitlenmeyecek! */}
-              <Suspense 
-                fallback={
-                  <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666666' }}>
-                    3D Görsel Yükleniyor...
-                  </div>
-                }
-              >
-                <InfinityKnot />
-              </Suspense>
+              {/* Cihaz WebGL destekliyorsa 3D'yi yükle, desteklemiyorsa statik bırak */}
+              {hasWebGL ? (
+                <Suspense 
+                  fallback={
+                    <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666666' }}>
+                      3D Görsel Yükleniyor...
+                    </div>
+                  }
+                >
+                  <InfinityKnot />
+                </Suspense>
+              ) : (
+                <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666666' }}>
+                  {/* 3D desteklemeyen cihazlar için zarif boşluk (veya ileride buraya img eklenebilir) */}
+                </div>
+              )}
             </div>
           </div>
 
