@@ -42,4 +42,4 @@ Projeyi yerel ortamınızda çalıştırmak için aşağıdaki adımları izleye
 
 1. **Projeyi Klonlayın:**
    ```bash
-   git clone [https://github.com/kullaniciadiniz/urgco-dijital.git](https://github.com/kullaniciadiniz/urgco-dijital.git)
+   git clone [https://github.com/berkeurg/projectUrgco.git](https://github.com/berkeurg/projectUrgco.git)
